@@ -85,20 +85,30 @@
 
  JR.scriptTagsTips = function(){
    var nodes = document.getElementsByTagName('script'),
-     head = document.getElementsByTagName('head')[0],
-     count = nodes.length-1; // -1 for the DOM Monster
+     head = document.getElementsByTagName('head')[0];
+
+   var count = 0, headcount = 0, i = nodes.length, sources = [];
+   while(i--){
+     if(nodes[i].src && nodes[i].src !== ''){
+       if(nodes[i].src.indexOf('dommonster.js') === -1 && nodes[i].src.indexOf('google-analytics.com/ga.js') === -1){
+         if(nodes[i].parentNode === head){
+            headcount = headcount + 1;
+            sources.push(nodes[i].src);
+         }
+         count = count + 1;
+       }
+     }else{
+       if(nodes[i].parentNode === head){
+         headcount = headcount + 1;
+       }
+       count = count + 1;
+     }
+   }
 
    if(count>2 && count<6)
      JR.tip('Found '+count+' &lt;script&gt; tags on page.','Try to reduce the amount of script tags.');
    if(nodes.length>=6)
      JR.warn('Found '+count+' &lt;script&gt; tags on page.','Try to reduce the amount of script tags.');
-
-   var i = nodes.length, headcount = 0, sources = [];
-   while(i--) 
-     if(nodes[i].parentNode == head) {
-       headcount++;
-       if(nodes[i].src) sources.push(nodes[i].src);
-     }
 
    if(headcount>0)
      JR.tip('<span style="cursor:help" title="'+sources.join('\n')+'">Found '+headcount+' &lt;script&gt; tags in HEAD.</span>','For better perceived loading performance move script tags to end of document.');
