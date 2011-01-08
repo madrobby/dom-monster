@@ -85,7 +85,7 @@
 
  JR.scriptTagsTips = function(){
    var nodes = document.getElementsByTagName('script'),
-     head = document.getElementsByTagName('head')[0];
+     head = document.head || document.getElementsByTagName('head')[0];
 
    var count = 0, headcount = 0, i = nodes.length, sources = [];
    while(i--){
