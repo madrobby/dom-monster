@@ -106,9 +106,9 @@
    }
 
    if(count>2 && count<6)
-     JR.tip('Found '+count+' &lt;script&gt; tags on page.','Try to reduce the amount of script tags.');
+     JR.tip('Found '+count+' &lt;script&gt; tags on page.','Try to reduce the number of script tags.');
    if(nodes.length>=6)
-     JR.warn('Found '+count+' &lt;script&gt; tags on page.','Try to reduce the amount of script tags.');
+     JR.warn('Found '+count+' &lt;script&gt; tags on page.','Try to reduce the number of script tags.');
 
    if(headcount>0)
      JR.tip('<span style="cursor:help" title="'+sources.join('\n')+'">Found '+headcount+' &lt;script&gt; tags in HEAD.</span>','For better perceived loading performance move script tags to end of document.');
@@ -143,9 +143,9 @@
  JR.iFrameTips = function(){
    var nodes = document.getElementsByTagName('iframe');
    if(nodes.length>0 && nodes.length<4)
-     JR.tip('Reduce the amount of &lt;iframe&gt; tags.','There are '+nodes.length+' iframe elements on the page.');
+     JR.tip('Reduce the number of &lt;iframe&gt; tags.','There are '+nodes.length+' iframe elements on the page.');
    if(nodes.length>=4)
-     JR.warn('Reduce the amount of &lt;iframe&gt; tags','There are '+nodes.length+' iframe elements on the page.');
+     JR.warn('Reduce the number of &lt;iframe&gt; tags','There are '+nodes.length+' iframe elements on the page.');
  };
 
  JR.cssTips = function(){
@@ -154,15 +154,15 @@
    if(i==0) return;
    while(i--) if((links[i].rel||'').toLowerCase()=='stylesheet') nodes.push(links[i]);
    if(nodes.length>1 && nodes.length<8)
-     JR.tip('Reduce the amount of &lt;link rel="stylesheet"&gt; tags.','There are '+nodes.length+' external stylesheets loaded on the page.');
+     JR.tip('Reduce the number of &lt;link rel="stylesheet"&gt; tags.','There are '+nodes.length+' external stylesheets loaded on the page.');
    if(nodes.length>=8)
-     JR.warn('Reduce the amount of &lt;link rel="stylesheet"&gt; tags','There are '+nodes.length+' external stylesheets loaded on the page.');
+     JR.warn('Reduce the number of &lt;link rel="stylesheet"&gt; tags','There are '+nodes.length+' external stylesheets loaded on the page.');
    }
    function styleAttributeTips(){
      var nodes = document.getElementsByTagName('*'), i = nodes.length, styleNodes = 0;
      while(i--) if(nodes[i].style.cssText.length > 0) styleNodes++;
      if(styleNodes>0)
-       JR.tip('Reduce the amount of tags that use the style attribute, replacing it with external CSS definitions.','There are '+styleNodes+' nodes that use the style attribute.');
+       JR.tip('Reduce the number of tags that use the style attribute, replacing it with external CSS definitions.','There are '+styleNodes+' nodes that use the style attribute.');
    }
    linkTagTips();
    styleAttributeTips();
@@ -311,7 +311,7 @@
      JR.warn('Average DOM serialization speed is '+bodycount.toFixed(3)+'s.','Try to reduce the complexity of the DOM structure.');
 
    if(nodes.length>1500)
-     JR.warn('Element count seems excessively high.','Performance might improve if you reduce the amount of nodes.');
+     JR.warn('Element count seems excessively high.','Performance might improve if you reduce the number of nodes.');
    if(average>8 && average<=15)
      JR.tip('Nesting depth is a little high.','Reducing it might increase performance.');
    if(very)
