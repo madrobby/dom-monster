@@ -117,32 +117,28 @@
     }
  };
 
+  JR.frameworkTips = function() {
+    // Version number on http://prototypejs.org/download
+    if ('Prototype' in window && Prototype.Version < '1.7') JR.tip("You are using Prototype v" + Prototype.Version + ".", "There is a newer version available, which potentially includes performance updates.");
 
- JR.frameworkTips = function(){
-   // Version number on http://prototypejs.org/download
-   if('Prototype' in window && Prototype.Version < '1.7')
-     JR.tip("You are using the Prototype JavaScript framework v"+Prototype.Version+".","There's a newer version available, which potentially includes performance updates.");
+    // Version number on http://script.aculo.us/downloads
+    if ('Scriptaculous' in window && Scriptaculous.Version < '1.9.0') JR.tip("You are using script.aculo.us v" + Scriptaculous.Version + ".", "There is a newer version available, which potentially includes performance updates.");
 
-   // Version number on http://script.aculo.us/downloads
-   if('Scriptaculous' in window && Scriptaculous.Version < '1.9.0')
-     JR.tip("You are using script.aculo.us v"+Scriptaculous.Version+".","There's a newer version available, which potentially includes performance updates.");
+    // Version number on http://jquery.com/
+    if (typeof jQuery == 'function' && jQuery.prototype.jquery < '1.4.4') JR.tip("You are using jQuery v" + jQuery.prototype.jquery + ".", "There is a newer version available, which potentially includes performance updates.");
 
-   // Version number on http://jquery.com/
-   if(typeof jQuery == 'function' && jQuery.prototype.jquery < '1.4.4')
-     JR.tip("You are using the jQuery JavaScript framework v"+jQuery.prototype.jquery+".","There's a newer version available, which potentially includes performance updates.");
+    // Version number on http://download.dojotoolkit.org/
+    if (typeof dojo == 'object' && dojo.version.toString() < '1.5.0' && !(dojo.version.toString().match(/dev/))) JR.tip("You are using Dojo v" + dojo.version.toString() + ".", "There is a newer version available, which potentially includes performance updates.");
 
-   // Version number on http://download.dojotoolkit.org/
-   if(typeof dojo == 'object' && dojo.version.toString() < '1.5.0' && !(dojo.version.toString().match(/dev/)))
-     JR.tip("You are using the dojo JavaScript toolkit v"+dojo.version.toString()+".","There's a newer version available, which potentially includes performance updates.");
+    // Version number on http://developer.yahoo.com/yui/
+    // YUI 2
+    if (typeof YAHOO == 'object' && YAHOO.env.getVersion('yahoo').version < '2.8.2') JR.tip("You are using YUI v" + YAHOO.env.getVersion('yahoo').version + ".", "There is a newer version available, which potentially includes performance updates.");
+    // YUI 3
+    if (typeof YUI == 'function' && YUI.version < '3.2.0') JR.tip("You are using YUI v" + YUI.version + ".", "There is a newer version available, which potentially includes performance updates.");
 
-   // Version number on http://developer.yahoo.com/yui/
-   if(typeof YAHOO == 'object' && typeof YAHOO.evn == 'object' && YAHOO.env.getVersion('yahoo').version < '2.8.2')
-     JR.tip("You are using the Yahoo! User Interface Library v"+YAHOO.env.getVersion('yahoo').version+".","There's a newer version available, which potentially includes performance updates.");
-
-   // Version number on http://mootools.net/download
-   if(typeof MooTools == 'object' && (!MooTools.version || MooTools.version < '1.3'))
-     JR.tip("You are using the MooTools JavaScript tools v"+MooTools.version+".","There's a newer version available, which potentially includes performance updates.");
- };
+    // Version number on http://mootools.net/download
+    if (typeof MooTools == 'object' && MooTools.version < '1.3') JR.tip("You are using MooTools v" + MooTools.version + ".", "There is a newer version available, which potentially includes performance updates.");
+  };
 
  JR.iFrameTips = function(){
    var nodes = document.getElementsByTagName('iframe');
