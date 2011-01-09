@@ -142,28 +142,38 @@
 
   JR.iFrameTips = function() {
     var nodes = document.getElementsByTagName('iframe');
-    JR[nodes.length > 0 && nodes.length < 4 ? 'tip' : 'warn']('Avoid using iframes.', 'There ' + (nodes.length > 1 ? 'are' : 'is') + ' ' + nodes.length + ' iframe ' + (nodes.length > 1 ? 'elements' : 'element') + ' on the page.');
+    if (nodes.length) {
+      JR[nodes.length < 4 ? 'tip' : 'warn']('Avoid using iframes.', 'There ' + (nodes.length > 1 ? 'are' : 'is') + ' ' + nodes.length + ' iframe ' + (nodes.length > 1 ? 'elements' : 'element') + '.');
+    }
   };
 
- JR.cssTips = function(){
-   function linkTagTips(){
-   var nodes = [], links = document.getElementsByTagName('link'), i = links.length;
-   if(i==0) return;
-   while(i--) if((links[i].rel||'').toLowerCase()=='stylesheet') nodes.push(links[i]);
-   if(nodes.length>1 && nodes.length<8)
-     JR.tip('Reduce the number of &lt;link rel="stylesheet"&gt; tags.','There are '+nodes.length+' external stylesheets loaded on the page.');
-   if(nodes.length>=8)
-     JR.warn('Reduce the number of &lt;link rel="stylesheet"&gt; tags','There are '+nodes.length+' external stylesheets loaded on the page.');
-   }
-   function styleAttributeTips(){
-     var nodes = document.getElementsByTagName('*'), i = nodes.length, styleNodes = 0;
-     while(i--) if(nodes[i].style.cssText.length > 0) styleNodes++;
-     if(styleNodes>0)
-       JR.tip('Reduce the number of tags that use the style attribute, replacing it with external CSS definitions.',styleNodes+' nodes use the style attribute.');
-   }
-   linkTagTips();
-   styleAttributeTips();
- };
+  JR.cssTips = function() {
+    function linkTagTips() {
+      var nodes = [],
+      links = document.getElementsByTagName('link'),
+      i = links.length;
+      if (i == 0) return;
+      while (i--) {
+        if ((links[i].rel || '').toLowerCase() == 'stylesheet') nodes.push(links[i]);
+      }
+      if (nodes.length) {
+        JR[nodes.length > 1 && nodes.length < 8 ? 'tip' : 'warn']('Reduce the number of &lt;link rel="stylesheet"&gt; tags.', 'There are ' + nodes.length + ' external style sheets loaded. Try to reduce the number by combining (and minifying) them.');
+      }
+    }
+
+    function styleAttributeTips() {
+      var nodes = document.getElementsByTagName('*'),
+      i = nodes.length,
+      styleNodes = 0;
+      while (i--) {
+        if (nodes[i].style.cssText.length) styleNodes++;
+      }
+      if (styleNodes) JR.tip(styleNodes + ' ' + (styleNodes > 1 ? 'nodes' : 'node') + ' using the style attribute.', 'Reduce the number of tags using the style attribute. Replace them with external CSS definitions.');
+    }
+
+    linkTagTips();
+    styleAttributeTips();
+  };
 
   JR.flashTips = function() {
     var nodes = [],
@@ -184,10 +194,8 @@
       }
     }
 
-    if (nodes.length == 1) {
-      JR.tip('Consider alternatives to using Flash.', 'There is 1 Flash object embedded. Replacing this with browser-native implementations (SVG, VML, Canvas) could lead to better loading times, especially if the Flash plugin is loaded first.');
-    } else if (nodes.length) {
-      JR.tip('Consider alternatives to using Flash.', 'There are ' + nodes.length + ' Flash objects embedded. Replacing these with browser-native implementations (SVG, VML, Canvas) could lead to better loading times, especially if the Flash plugin is loaded first.');
+    if (nodes.length) {
+      JR.tip('Consider alternatives to using Flash.', 'There ' + (nodes.length > 1 ? 'are' : 'is') + ' ' + nodes.length + ' Flash ' + (nodes.length > 1 ? 'objects' : 'object') + ' embedded. Replacing ' + (nodes.length > 1 ? 'these' : 'it') + ' with browser-native implementations (SVG, VML, Canvas) could lead to better loading times, especially if the Flash plugin is loaded first.');
     }
   };
 
