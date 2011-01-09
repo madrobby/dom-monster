@@ -90,7 +90,9 @@
    var count = 0, headcount = 0, i = nodes.length, sources = [];
    while(i--){
      if(nodes[i].src && nodes[i].src !== ''){
-       if(nodes[i].src.indexOf('dommonster.js') === -1 && nodes[i].src.indexOf('google-analytics.com/ga.js') === -1){
+       if(nodes[i].src.indexOf('dommonster.js') === -1 && 
+          nodes[i].src.indexOf('google-analytics.com/ga.js') === -1 &&
+          nodes[i].src.indexOf('getclicky.com/in.php') === -1){
          if(nodes[i].parentNode === head){
             headcount = headcount + 1;
             sources.push(nodes[i].src);
