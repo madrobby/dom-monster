@@ -113,7 +113,7 @@
     }
 
     if (headcount) {
-      JR.tip('<abbr style="cursor:help;border-bottom:1px #000 dotted;" title="' + sources.join(' \n') + '">'+ headcount + ' &lt;script&gt; tags in HEAD.</abbr>', 'If possible, move those &lt;script&gt; tags to the end of the document for better loading performance.');
+      JR.tip('<abbr style="cursor:help;border-bottom:1px #000 dotted;" title="' + sources.join(' \n') + '">'+ headcount + ' &lt;script&gt; ' + (headcount > 1 ? 'tags' : 'tag') + ' in HEAD.</abbr>', 'If possible, move ' + (headcount > 1 ? 'these' : 'this') + ' &lt;script&gt; ' + (headcount > 1 ? 'tags' : 'tag') + ' to the end of the document for better loading performance.');
     }
  };
 
@@ -140,13 +140,10 @@
     if (typeof MooTools == 'object' && MooTools.version < '1.3') JR.tip("You are using MooTools v" + MooTools.version + ".", "There is a newer version available, which potentially includes performance updates.");
   };
 
- JR.iFrameTips = function(){
-   var nodes = document.getElementsByTagName('iframe');
-   if(nodes.length>0 && nodes.length<4)
-     JR.tip('Reduce the number of &lt;iframe&gt; tags.','There are '+nodes.length+' iframe elements on the page.');
-   if(nodes.length>=4)
-     JR.warn('Reduce the number of &lt;iframe&gt; tags','There are '+nodes.length+' iframe elements on the page.');
- };
+  JR.iFrameTips = function() {
+    var nodes = document.getElementsByTagName('iframe');
+    JR[nodes.length > 0 && nodes.length < 4 ? 'tip' : 'warn']('Avoid using iframes.', 'There ' + (nodes.length > 1 ? 'are' : 'is') + ' ' + nodes.length + ' iframe ' + (nodes.length > 1 ? 'elements' : 'element') + ' on the page.');
+  };
 
  JR.cssTips = function(){
    function linkTagTips(){
