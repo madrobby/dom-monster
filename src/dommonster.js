@@ -17,13 +17,13 @@
  };
 
  JR.flush = function(string){
-   var results = document.getElementById('jr_results_tips'), 
+   var results = document.getElementById('jr_results_tips'),
      html = '<div style="'+JR.reset+';margin-left:230px;padding-top:4px">';
    function flushArray(array){
      for(var i=0;i<array.length;i++)
        html += '<div style="'+JR.reset+'margin:0 0 4px 0;padding:4px 0px 0px 0px;font-size:11px">' + array[i] + '</div>';
    }
-   var prognosis = document.getElementById("jr_results_prognosis"), 
+   var prognosis = document.getElementById("jr_results_prognosis"),
      container = document.getElementById("jr_results_prognosis_container"),
      warnings = JR._lines.warn.length;
    if(warnings>0) {
@@ -43,9 +43,9 @@
      document.getElementById('jr_results_warnings_container').style.cssText += ';display:none';
    }
 
-   flushArray(JR._lines.warn);    
+   flushArray(JR._lines.warn);
    flushArray(JR._lines.tip);
-   flushArray(JR._lines.info);  
+   flushArray(JR._lines.info);
    html += '</div>';
    results.innerHTML += html;
 
@@ -162,26 +162,37 @@
      var nodes = document.getElementsByTagName('*'), i = nodes.length, styleNodes = 0;
      while(i--) if(nodes[i].style.cssText.length > 0) styleNodes++;
      if(styleNodes>0)
-       JR.tip('Reduce the number of tags that use the style attribute, replacing it with external CSS definitions.','There are '+styleNodes+' nodes that use the style attribute.');
+       JR.tip('Reduce the number of tags that use the style attribute, replacing it with external CSS definitions.',styleNodes+' nodes use the style attribute.');
    }
    linkTagTips();
    styleAttributeTips();
  };
 
- JR.flashTips = function(){
-   var nodes = [], obj = document.getElementsByTagName('embed'), i = obj.length;
-   if(i>0) while(i--) if((obj[i].type||'').toLowerCase()=='application/x-shockwave-flash') nodes.push(obj[i]);
+  JR.flashTips = function() {
+    var nodes = [],
+    obj = document.getElementsByTagName('embed'),
+    i = obj.length;
 
-   obj = document.getElementsByTagName('object');
-   i = obj.length;
-   if(i>0) while(i--) {
-     if((obj[i].classid||'').toLowerCase()=='clsid:D27CDB6E-AE6D-11cf-96B8-444553540000') nodes.push(obj[i]);
-     if((obj[i].type||'').toLowerCase()=='application/x-shockwave-flash') nodes.push(obj[i]);
-   }
+    if (i) {
+      while (i--) {
+        if ((obj[i].type || '').toLowerCase() == 'application/x-shockwave-flash') nodes.push(obj[i]);
+      }
+    }
 
-   if(nodes.length>0)
-     JR.tip('Consider alternatives to using Flash.','There are '+nodes.length+' Flash objects embedded. Replacing these with browser-native implemenations (SVG, VML, Canvas) could lead to better loading times, especially if the Flash plugin is first loaded.');
- };
+    obj = document.getElementsByTagName('object');
+    i = obj.length;
+    if (i) {
+      while (i--) {
+        if ((obj[i].classid || '').toLowerCase() == 'clsid:D27CDB6E-AE6D-11cf-96B8-444553540000' || (obj[i].type || '').toLowerCase() == 'application/x-shockwave-flash') nodes.push(obj[i]);
+      }
+    }
+
+    if (nodes.length == 1) {
+      JR.tip('Consider alternatives to using Flash.', 'There is 1 Flash object embedded. Replacing this with browser-native implementations (SVG, VML, Canvas) could lead to better loading times, especially if the Flash plugin is loaded first.');
+    } else if (nodes.length) {
+      JR.tip('Consider alternatives to using Flash.', 'There are ' + nodes.length + ' Flash objects embedded. Replacing these with browser-native implementations (SVG, VML, Canvas) could lead to better loading times, especially if the Flash plugin is loaded first.');
+    }
+  };
 
  JR.getStyle = function(element, style) {
    style = style == 'float' ? 'cssFloat' : style;
@@ -218,9 +229,9 @@
      empty = 0, deprecated = 0, whitespace = 0, textnodes = 0, comments = 0, deprecatedTags = {};
    while(i--) {
      var tag = nodes[i].tagName.toLowerCase();
-     if (nodes[i].childNodes.length==0 && !(tag=='link' || tag=='br' || tag=='script' || tag=='meta' || tag=='img' || 
-           tag=='a' || tag=='input' || tag=='hr' || tag=='param' || tag=='iframe' || 
-           tag=='area') && !((nodes[i].id||'') == '_firebugConsole')) {
+     if (nodes[i].childNodes.length==0 && !(tag=='link' || tag=='br' || tag=='script' || tag=='meta' || tag=='img' ||
+           tag=='a' || tag=='input' || tag=='hr' || tag=='param' || tag=='iframe' ||
+           tag=='area' || tag=='base') && !((nodes[i].id||'') == '_firebugConsole')) {
        if(JR._firebug) console.warn('Empty node', nodes[i]);
        empty++;
      }
@@ -344,19 +355,19 @@
    };
    var old = document.getElementById('jr_results_tips');
    if(old) old.parentNode.removeChild(old);
-   setTimeout(function(){  
+   setTimeout(function(){
      if(JR._firebug)
        JR.info('Check the Firebug console for detailed information on some of the tips.');
      try{
        JR.performanceTips();
-     }catch(e){ 
+     }catch(e){
        JR.info('Error '+e+' while analyzing page. Please let DOM Monster know about this problem!');
      };
      var body = document.getElementsByTagName('body')[0], node = document.createElement('div');
      node.id = 'jr_results';
      body.appendChild(node);
 
-     node.style.cssText = 
+     node.style.cssText =
        JR.reset+'text-align:left;z-index:1000000;letter-spacing:0;position:fixed;bottom:0;'+
        'color:#444;font:12px/13px \'Helvetica Neue\', Verdana, Arial, sans serif;'+
        'width:80%;left:10%';
