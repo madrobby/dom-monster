@@ -105,10 +105,8 @@
      }
    }
 
-   if(count>2 && count<6)
-     JR.tip('Found '+count+' &lt;script&gt; tags on page.','Try to reduce the amount of script tags.');
-   if(nodes.length>=6)
-     JR.warn('Found '+count+' &lt;script&gt; tags on page.','Try to reduce the amount of script tags.');
+   if(count>2) && count<6)
+     JR[count < 6 ? 'tip' : 'warn']('Found '+count+' &lt;script&gt; tags on page.','Try to reduce the amount of script tags.');
 
    if(headcount>0)
      JR.tip('<span style="cursor:help" title="'+sources.join('\n')+'">Found '+headcount+' &lt;script&gt; tags in HEAD.</span>','For better perceived loading performance move script tags to end of document.');
@@ -142,10 +140,8 @@
 
  JR.iFrameTips = function(){
    var nodes = document.getElementsByTagName('iframe');
-   if(nodes.length>0 && nodes.length<4)
-     JR.tip('Reduce the amount of &lt;iframe&gt; tags.','There are '+nodes.length+' iframe elements on the page.');
-   if(nodes.length>=4)
-     JR.warn('Reduce the amount of &lt;iframe&gt; tags','There are '+nodes.length+' iframe elements on the page.');
+   if(nodes.length)
+     JR[nodes.length<4 ? 'tip' : 'warn']('Reduce the amount of &lt;iframe&gt; tags.','There are '+nodes.length+' iframe elements on the page.');
  };
 
  JR.cssTips = function(){
@@ -153,10 +149,8 @@
    var nodes = [], links = document.getElementsByTagName('link'), i = links.length;
    if(i==0) return;
    while(i--) if((links[i].rel||'').toLowerCase()=='stylesheet') nodes.push(links[i]);
-   if(nodes.length>1 && nodes.length<8)
-     JR.tip('Reduce the amount of &lt;link rel="stylesheet"&gt; tags.','There are '+nodes.length+' external stylesheets loaded on the page.');
-   if(nodes.length>=8)
-     JR.warn('Reduce the amount of &lt;link rel="stylesheet"&gt; tags','There are '+nodes.length+' external stylesheets loaded on the page.');
+   if(nodes.length>1)
+     JR[nodes.length<8 ? 'tip' : 'warn']('Reduce the amount of &lt;link rel="stylesheet"&gt; tags.','There are '+nodes.length+' external stylesheets loaded on the page.');
    }
    function styleAttributeTips(){
      var nodes = document.getElementsByTagName('*'), i = nodes.length, styleNodes = 0;
@@ -176,7 +170,7 @@
    i = obj.length;
    if(i>0) while(i--) {
      if((obj[i].classid||'').toLowerCase()=='clsid:D27CDB6E-AE6D-11cf-96B8-444553540000') nodes.push(obj[i]);
-     if((obj[i].type||'').toLowerCase()=='application/x-shockwave-flash') nodes.push(obj[i]);
+     else if((obj[i].type||'').toLowerCase()=='application/x-shockwave-flash') nodes.push(obj[i]);
    }
 
    if(nodes.length>0)
@@ -204,10 +198,8 @@
        if(JR._firebug) console.info('Transparent node', nodes[i]);
      }
    }
-   if(op.length>0 && op.length < 10)
-     JR.tip('Some nodes use transparency.','To improve rendering performance, try not to use the CSS opacity property (found '+op.length+' nodes, marked with a dashed blue border).');
-   if(op.length >= 10)
-     JR.warn('Lots of nodes use transparency.','To improve rendering performance, try not to use the CSS opacity property (found '+op.length+' nodes, marked with a dashed blue border).');
+   if(op.length>0)
+     JR[op.length < 10 ? 'tip' : 'warn']('Some nodes use transparency.','To improve rendering performance, try not to use the CSS opacity property (found '+op.length+' nodes, marked with a dashed blue border).');
  };
 
  JR.nodesTips = function(){
