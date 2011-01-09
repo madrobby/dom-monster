@@ -11,10 +11,10 @@
 
  JR.reset = " margin:0;padding:0;border:0;outline:0;font-weight:inherit;font-style:inherit;font-size:100%;font-family:inherit;vertical-align: baseline;color:inherit;line-height:inherit;";
 
- JR.close = function(){
-   var results = document.getElementById('jr_results_tips');
-   results.parentNode.removeChild(results);
- };
+  JR.close = function(){
+    var results = document.getElementById('jr_results');
+    results.parentNode.removeChild(results);
+  };
 
  JR.flush = function(string){
    var results = document.getElementById('jr_results_tips'),
