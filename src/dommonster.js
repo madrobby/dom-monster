@@ -135,8 +135,14 @@
       JR.tip("You are using script.aculo.us v"+Scriptaculous.Version+".","There's a newer version available, which potentially includes performance updates.");
   
     // Version number on http://jquery.com/
-    if(typeof jQuery == 'function' && jQuery.prototype.jquery < '1.4.4')
-      JR.tip("You are using the jQuery JavaScript framework v"+jQuery.prototype.jquery+".","There's a newer version available, which potentially includes performance updates.");
+    if(typeof jQuery == 'function' ){
+			if(jQuery.prototype.jquery < '1.4.4')
+      	JR.tip("You are using the jQuery JavaScript framework v"+jQuery.prototype.jquery+".","There's a newer version available, which potentially includes performance updates.");
+			
+			// Version number on http://jqueryui.com/home
+			if(jQuery.ui && jQuery.ui.version < '1.8.7')
+      	JR.tip("You are using the jQuery UI JavaScript framework v"+jQuery.ui.version+".","There's a newer version available, which potentially includes performance updates.");
+		}
   
     // Version number on http://download.dojotoolkit.org/
     if(typeof dojo == 'object' && dojo.version.toString() < '1.5.0' && !(dojo.version.toString().match(/dev/)))
@@ -144,11 +150,19 @@
   
     // Version number on http://developer.yahoo.com/yui/
     if(typeof YAHOO == 'object' && typeof YAHOO.evn == 'object' && YAHOO.env.getVersion('yahoo').version < '2.8.2')
-      JR.tip("You are using the Yahoo! User Interface Library v"+YAHOO.env.getVersion('yahoo').version+".","There's a newer version available, which potentially includes performance updates.");
+      JR.tip("You are using the Yahoo! User Interface Library 2 v"+YAHOO.env.getVersion('yahoo').version+".","There's a newer version available, which potentially includes performance updates.");
+		
+		// Version number on http://developer.yahoo.com/yui/3/
+		if('YUI' in window && typeof YUI == 'function' && YUI().version < '3.2.0')
+			JR.tip("You are using the Yahoo! User Interface Library 3 v"+YUI().version+".","There's a newer version available, which potentially includes performance updates.");
   
     // Version number on http://mootools.net/download
     if(typeof MooTools == 'object' && (!MooTools.version || MooTools.version < '1.3'))
       JR.tip("You are using the MooTools JavaScript tools v"+MooTools.version+".","There's a newer version available, which potentially includes performance updates.");
+		
+		// Version number Extjs on http://www.sencha.com/products/js/download.php
+		if(typeof Ext === 'object' && Ext.version < '3.3.1')
+			JR.tip("You are using the Ext JS v"+Ext.version+".","There's a newer version available, which potentially includes performance updates.");
   };
   
   JR.iFrameTips = function(){
