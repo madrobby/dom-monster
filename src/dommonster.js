@@ -12,7 +12,7 @@
   function $(id){ return document.getElementById(id); }
   
   JR._lines = { info:[], tip:[], warn:[] };
-  JR._firebug = ('console' in window && 'firebug' in console);
+  JR._console = ('console' in window && 'log' in console && 'warn' in console && 'info' in console);
   
   JR.reset = " margin:0;padding:0;border:0;outline:0;font-weight:inherit;font-style:inherit;font-size:100%;font-family:inherit;vertical-align: baseline;color:inherit;line-height:inherit;";
   
@@ -270,7 +270,7 @@
       if(opacity<1) {
         nodes[i].style.cssText += ';border:1px dashed #00f';
         op.push(nodes[i]);
-        if(JR._firebug) console.info('Transparent node', nodes[i]);
+        if(JR._console) console.info('Transparent node', nodes[i]);
       }
     }
     if(op.length>0 && op.length < 10)
@@ -284,18 +284,18 @@
       return value<mid?'low':value<high?'mid':'high';
     }
     var nodes = document.getElementsByTagName('*'), i = nodes.length, nodecount = 0,
-      empty = 0, deprecated = 0, whitespace = 0, textnodes = 0, comments = 0, deprecatedTags = {};
+      empty = 0, deprecated = 0, whitespace = 0, textnodes = 0, comments = 0, deprecatedTags = {}, emptyAttr = 0;
     while(i--) {
       var tag = nodes[i].tagName.toLowerCase();
       if (nodes[i].childNodes.length==0 && !(tag=='link' || tag=='br' || tag=='script' || tag=='meta' || tag=='img' ||
             tag=='a' || tag=='input' || tag=='hr' || tag=='param' || tag=='iframe' ||
             tag=='area' || tag=='base') && !((nodes[i].id||'') == '_firebugConsole')) {
-        if(JR._firebug) console.warn('Empty node', nodes[i]);
+        if(JR._console) console.warn('Empty node', nodes[i]);
         empty++;
       }
   
       if (tag=='font' || tag=='center' || tag=='s' || tag=='strike' || tag=='u' || tag=='dir' || tag=='applet'){
-        if(JR._firebug) console.warn('Deprecated node', nodes[i]);
+        if(JR._console) console.warn('Deprecated node', nodes[i]);
         if(!deprecatedTags[tag]) deprecatedTags[tag] = true;
         deprecated++;
       }
@@ -308,7 +308,7 @@
       if(element.nodeType==8)
         comments++;
       if(element.nodeType==3 && /^\s+$/.test(element.nodeValue)){
-        // if(JR._firebug) console.warn('Whitespace-only text node', element);
+        // if(JR._console) console.warn('Whitespace-only text node', element);
         whitespace++;
       }
       if(element.nodeType==3)
@@ -339,6 +339,55 @@
       '<strong>'+value+'</strong> '+stat+
       '</div>'
   };
+	
+	JR.globals = function(){
+		function ignore(name){
+			var allowed = ['Components','XPCNativeWrapper','XPCSafeJSObjectWrapper','getInterface','netscape','GetWeakReference'],
+			i = allowed.length;
+			while(i--){
+				if(allowed[i] === name)
+					return true;
+			}
+			return false;
+		}
+		
+		function nametag(attr){
+			var ele = nametag.cache = nametag.cache || document.getElementsByTagName('*'), i = ele.length;
+			while(i--){
+				if(ele[i].name && ele[i].name == attr)
+					return true;
+			}
+			return false;
+		}
+		
+		var global = (function(){ return this })(), properties = {}, prop, found = [], clean, iframe = document.createElement('iframe');
+		iframe.style.display = 'none';
+		iframe.src = 'about:blank';
+		document.body.appendChild(iframe);
+		
+		clean = iframe.contentWindow;
+		
+		for(prop in global){
+			if(!ignore(prop) && !/^[0-9]/.test(prop) && !(document.getElementById(prop) || {}).nodeName && !nametag(prop)){
+				properties[prop] = true;
+			}
+		}
+		
+		for(prop in clean){
+			if(properties[prop]){
+				delete properties[prop];
+			}
+		}
+		
+		for(prop in properties){
+			found.push(prop.split('(')[0]);
+		}
+		
+		if(found.length > 5){
+      JR.tip('Found more than 5 JavaScript globals','Reducing it might increase performance.');
+			if(JR._console) console.log('Found more than 5 globals on your page', found);
+		}
+	};
   
   JR.performanceTips = function(){
     function level(value,mid,high){
@@ -393,6 +442,7 @@
     JR.cssTips();
     JR.opacityTips();
     JR.flashTips();
+		JR.globals();
   
     if(JR._lines.tip.length == 0 && JR._lines.warn.length == 0)
       JR.tip('No tips! Congratulations! It seems your site is up to speed!');
@@ -414,7 +464,7 @@
   var old = $('jr_results_tips');
   if(old) old.parentNode.removeChild(old);
   setTimeout(function(){
-    if(JR._firebug)
+    if(JR._console)
       JR.info('Check the Firebug console for detailed information on some of the tips.');
     try {
       JR.performanceTips();
