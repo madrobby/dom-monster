@@ -286,7 +286,7 @@
     var nodes = document.getElementsByTagName('*'), i = nodes.length, nodecount = 0,
       empty = 0, deprecated = 0, whitespace = 0, textnodes = 0, comments = 0, deprecatedTags = {}, emptyAttr = 0;
     while(i--) {
-      var tag = nodes[i].tagName.toLowerCase();
+      var tag = nodes[i].tagName.toLowerCase(), attribute;
       if (nodes[i].childNodes.length==0 && !(tag=='link' || tag=='br' || tag=='script' || tag=='meta' || tag=='img' ||
             tag=='a' || tag=='input' || tag=='hr' || tag=='param' || tag=='iframe' ||
             tag=='area' || tag=='base') && !((nodes[i].id||'') == '_firebugConsole')) {
@@ -299,6 +299,27 @@
         if(!deprecatedTags[tag]) deprecatedTags[tag] = true;
         deprecated++;
       }
+			
+			if(tag=='link' && /stylesheet|icon|shortcut|prefetch/.test(nodes[i].rel) && nodes[i].getAttribute('href') === ''){
+				if(JR._console) console.warn('Empty href attribute', nodes[i]);
+				emptyAttr++;
+			}
+			
+			if(tag=='html'){
+				attribute = nodes[i].attributes.getNamedItem('manifest');
+				if(attribute && attribute.value === ''){
+					if(JR._console) console.warn('Empty manifest attribute', nodes[i]);
+					emptyAttr++;
+				}
+			}
+			
+			if(tag=='video' || tag=='audio' || tag=='iframe' || tag=='input' || tag=='embed' || tag == 'img'){
+				attribute = nodes[i].attributes.getNamedItem('src');
+				if(attribute && attribute.value === '' ){
+					if(JR._console) console.warn('Empty src attribute', nodes[i]);
+					emptyAttr++;
+				}
+			}
     }
     function findWhitespaceTextnodes(element){
       if(element.childNodes.length>0)
@@ -329,6 +350,8 @@
       JR.tip(((whitespace/nodecount)*100).toFixed(1)+'% of nodes are whitespace-only text nodes.','Reducing the amount of whitespace, like line breaks and tab stops, can help improve the loading and DOM API performance of the page.');
     if(comments)
       JR.tip('There are '+comments+' HTML comments.','Removing the comments can help improve the loading and DOM API performance of the page.');
+		if(emptyAttr)
+			JR.tip('There are '+emptyAttr+' HTML nodes with empty source attributes', 'Removing these nodes, or updating the attributes will improve the loading of the page.')
   };
   
   JR.statsHTML = '';
