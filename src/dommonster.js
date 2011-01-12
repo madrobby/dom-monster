@@ -16,6 +16,10 @@
   
   JR.reset = " margin:0;padding:0;border:0;outline:0;font-weight:inherit;font-style:inherit;font-size:100%;font-family:inherit;vertical-align: baseline;color:inherit;line-height:inherit;";
   
+  function html(str){
+    return str.replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+  
   JR.close = function(){
     var results = $('jr_results_tips');
     results.parentNode.removeChild(results);
@@ -173,6 +177,39 @@
     }
     linkTagTips();
     styleAttributeTips();
+  };
+  
+  // via https://gist.github.com/773044
+  function getDocType() {
+    var node = document.firstChild;
+    while (node) {
+      var nodeType = node.nodeType;
+      if (nodeType === 10) {
+        // doctype
+        var doctype = '<!DOCTYPE '+(document.documentElement.tagName || 'html').toLowerCase();
+        if (node.publicId) {
+          doctype += ' PUBLIC "' + node.publicId + '"';
+        }
+      if (node.systemId) {
+        doctype += ' "' + node.systemId + '"';
+      }
+      return doctype+'>';
+      }
+      if (nodeType === 8 && (""+node.nodeValue).toLowerCase().indexOf("doctype") === 0) {
+        // IE represents DocType as comment
+        return '<!' + node.nodeValue + '>';
+      }
+      node = node.nextSibling;
+    }
+    return "";
+  }
+  
+  JR.doctypeTips = function(){
+    var dt = getDocType();
+    if(dt !== "" && getDocType().toLowerCase() !== '<!doctype html>')
+      JR.tip('Switch to HTML5 and use a short doctype declaration.', 
+        html('Using (<!DOCTYPE html>) saves some bytes and increases parsing speed '+
+          '(your current declaration is ' + dt + ').'));
   };
   
    JR.flashTips = function() {
@@ -335,6 +372,7 @@
     if(very)
       JR.warn('Nesting depth is very high.','Some of the nodes are nested more than 15 levels deep (these are marked with a dashed red border).');
   
+    JR.doctypeTips();  
     JR.frameworkTips();
     JR.scriptTagsTips();
     JR.iFrameTips();
