@@ -384,8 +384,8 @@
 		}
 		
 		if(found.length > 5){
-      JR.tip('Found more than 5 JavaScript globals','Reducing it might increase performance.');
-			if(JR._console) console.log('Found more than 5 globals on your page', found);
+      JR.tip('Found '+found.length+' JavaScript globals.','Cutting back on globals can increase JavaScript performance.' + (JR._console ? ' See JavaScript console for details.' : ''));
+			if(JR._console) console.log('Found more than 5 globals on your page.', found);
 		}
 	};
   
