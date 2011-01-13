@@ -100,7 +100,7 @@
     var nodes = document.getElementsByTagName('script'),
       head = document.head || document.getElementsByTagName('head')[0];
   
-    var count = 0, headcount = 0, i = nodes.length, sources = [];
+    var count = 0, headcount = 0, i = nodes.length, sources = [], longInlines = [];
     while(i--){
       if(nodes[i].src && nodes[i].src !== ''){
         if(nodes[i].src.indexOf('dommonster.js') === -1 &&
@@ -110,12 +110,19 @@
              headcount = headcount + 1;
              sources.push(nodes[i].src);
           }
+		  if(nodes[i].innerHTML.length >= (1024*2))
+          	longInlines.push(nodes[i]);
+			
           count = count + 1;
         }
       }else{
         if(nodes[i].parentNode === head){
           headcount = headcount + 1;
         }
+		
+		if(nodes[i].innerHTML.length >= (1024*2))
+          	longInlines.push(nodes[i]);
+		
         count = count + 1;
       }
     }
@@ -125,6 +132,12 @@
     if(nodes.length>=6)
       JR.warn('Found '+count+' &lt;script&gt; tags on page.','Try to reduce the number of script tags.');
   
+  
+	// inline scripts block rendering
+    // http://www.stevesouders.com/blog/2009/05/06/positioning-inline-scripts/
+    if(longInlines.length>0)
+    	JR.tip('Found ' + longInlines.length + ' big (>=2kB) inline script'+((longInlines.length>1)?'s':'')+'.', 'Try to avoid big inline scripts, they block rendering and won\'t get cached.');
+    
     if(headcount>0)
       JR.tip('<span style="cursor:help" title="'+sources.join('\n')+'">Found '+headcount+' &lt;script&gt; tags in HEAD.</span>','For better perceived loading performance move script tags to end of document.');
   };
@@ -157,7 +170,7 @@
       JR.tip("You are using the Yahoo! User Interface Library 2 v"+YAHOO.env.getVersion('yahoo').version+".","There's a newer version available, which potentially includes performance updates.");
 
     // Version number on http://developer.yahoo.com/yui/3/
-    if('YUI' in window && typeof YUI == 'function' && YUI().version < '3.2.0')
+    if('YUI' in window && typeof YUI == 'function' && YUI().version < '3.3.0')
       JR.tip("You are using the Yahoo! User Interface Library 3 v"+YUI().version+".","There's a newer version available, which potentially includes performance updates.");
   
     // Version number on http://mootools.net/download
