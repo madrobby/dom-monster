@@ -71,7 +71,7 @@
     var color = { info: '888', tip:'88f', warn:'efb000' }[type];
     JR._lines[type].push(
       '<div style="'+JR.reset+'text-transform:uppercase;font-size:10px;border:1px solid #'+color+';width:32px;color:#'+color+';-webkit-border-radius:5px;padding:1px;float:left;text-align:center;margin:-2px 4px 0px 0px">'+type+'</div> '+
-      '<strong>'+string+'</strong> '+hint);
+      '<strong style="'+JR.reset+'font-weight:bold">'+string+'</strong> '+hint);
   };
   JR.tip = function(string, hint){ JR.log(string,hint,'tip'); };
   JR.info = function(string, hint){ JR.log(string,hint,'info'); };
