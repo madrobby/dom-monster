@@ -110,19 +110,19 @@
              headcount = headcount + 1;
              sources.push(nodes[i].src);
           }
-		  if(nodes[i].innerHTML.length >= (1024*2))
-          	longInlines.push(nodes[i]);
-			
+      if(nodes[i].innerHTML.length >= (1024*2))
+            longInlines.push(nodes[i]);
+      
           count = count + 1;
         }
       }else{
         if(nodes[i].parentNode === head){
           headcount = headcount + 1;
         }
-		
-		if(nodes[i].innerHTML.length >= (1024*2))
-          	longInlines.push(nodes[i]);
-		
+    
+    if(nodes[i].innerHTML.length >= (1024*2))
+            longInlines.push(nodes[i]);
+    
         count = count + 1;
       }
     }
@@ -133,10 +133,10 @@
       JR.warn('Found '+count+' &lt;script&gt; tags on page.','Try to reduce the number of script tags.');
   
   
-	// inline scripts block rendering
+  // inline scripts block rendering
     // http://www.stevesouders.com/blog/2009/05/06/positioning-inline-scripts/
     if(longInlines.length>0)
-    	JR.tip('Found ' + longInlines.length + ' big (>=2kB) inline script'+((longInlines.length>1)?'s':'')+'.', 'Try to avoid big inline scripts, they block rendering and won\'t get cached.');
+      JR.tip('Found ' + longInlines.length + ' big (>=2kB) inline script'+((longInlines.length>1)?'s':'')+'.', 'Try to avoid big inline scripts, they block rendering and won\'t get cached.');
     
     if(headcount>0)
       JR.tip('<span style="cursor:help" title="'+sources.join('\n')+'">Found '+headcount+' &lt;script&gt; tags in HEAD.</span>','For better perceived loading performance move script tags to end of document.');
@@ -182,38 +182,36 @@
       JR.tip("You are using the Ext JS v"+Ext.version+".","There's a newer version available, which potentially includes performance updates.");
   };
 
-	JR.webfontTips = function(){
-		if(typeof Typekit == 'object'){
-			JR.warn("You are using the Typekit webfont service.","Using external webfont services can increase your page load times, as well as possible downtime if the service goes down.");
-			return "";
-		}
-		
-		function isFontService(href){
-		if(href.indexOf("webtype.com") != -1 || href.indexOf("fontdeck.com") != -1 || href.indexOf("fontslive.com") != -1 ||
-		 		 href.indexOf("fonts.com") != -1 || href.indexOf("fonts.googleapis.com") || href.indexOf("kernest.com") ||
-				 href.indexOf("typotheque.com") != -1)
-			return true;
-		else
-			return false;
-		}
-		var styles = document.styleSheets, i = styles.length;
-		if(i==0) return;
+  JR.webfontTips = function(){
+    var tiptext = "Using external webfont services can increase your page load times, as well as possible downtime if the service goes down.";
+    
+    if(typeof Typekit == 'object')
+      JR.tip("You are using the Typekit webfont service.", tiptext);
+    
+    function isFontService(href){
+      return (href.indexOf("webtype.com") != -1 || href.indexOf("fontdeck.com") != -1 || 
+        href.indexOf("fontslive.com") != -1 || href.indexOf("fonts.com") != -1 || 
+        href.indexOf("fonts.googleapis.com") || href.indexOf("kernest.com") ||
+        href.indexOf("typotheque.com") != -1);
+    }
+    var styles = document.styleSheets, i = styles.length;
+    if(i==0) return;
     while(i--) {
-			var href = styles[i].href||'', j = 0;
-			if(styles[i].rules) j = styles[i].rules.length;
-			if(isFontService(href)){
-			  JR.warn("You are using an external webfont service.","Using external webfont services can increase your page load times, as well as possible downtime if the service goes down.");
-				return "";
-			}
-			if(j==0) continue;
-			while(j--){
-				var href = styles[i].rules[j].href||'';
-				if(isFontService(href)){
-			  	JR.warn("You are using an external webfont service.","Using external webfont services can increase your page load times, as well as possible downtime if the service goes down.");
-					return "";
-				}
-			}
-		}
+      var href = styles[i].href||'', j = 0;
+      if(styles[i].rules) j = styles[i].rules.length;
+      if(isFontService(href)){
+        JR.tip("You are using an external webfont service.", tiptext);
+        return "";
+      }
+      if(j==0) continue;
+      while(j--){
+        var href = styles[i].rules[j].href||'';
+        if(isFontService(href)){
+          JR.tip("You are using an external webfont service.", tiptext);
+          return "";
+        }
+      }
+    }
   };
 
   JR.iFrameTips = function(){
@@ -522,7 +520,7 @@
   
     JR.doctypeTips();
     JR.frameworkTips();
-		JR.webfontTips();
+    JR.webfontTips();
     JR.scriptTagsTips();
     JR.iFrameTips();
     JR.cssTips();
