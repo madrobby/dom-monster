@@ -160,10 +160,9 @@
 	}	
     return c;    
   };
-  JR.spanish = function(){
+  JR.changeLanguage = function(){
     JR.language = 'es';
-    JR.flush();
-    alert("hola");
+    //Ideas???
   };
   
   JR.flush = function(string){
