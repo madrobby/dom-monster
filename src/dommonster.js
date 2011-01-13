@@ -331,7 +331,7 @@
     function level(value,mid,high){
       return value<mid?'low':value<high?'mid':'high';
     }
-    var nodes = document.getElementsByTagName('*'), i = nodes.length, nodecount = 0, ids = {}, multiIds = [], multiIdsElements = [],
+    var nodes = [].slice(document.getElementsByTagName('*')), i = nodes.length, nodecount = 0, ids = {}, multiIds = [], multiIdsElements = [],
       empty = 0, deprecated = 0, whitespace = 0, textnodes = 0, comments = 0, deprecatedTags = {}, emptyAttr = 0;
     while(i--) {
       var tag = nodes[i].tagName.toLowerCase(), attribute;
