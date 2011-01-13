@@ -20,6 +20,10 @@
     return str.replace(/</g,'&lt;').replace(/>/g,'&gt;');
   }
   
+  function dmlink(str, url){
+    return '<a style="'+JR.reset+'text-decoration:underline;color:#844" href="'+url+'">'+html(str)+'</a>';
+  }
+  
   JR.close = function(){
     var results = $('jr_results_tips');
     results.parentNode.removeChild(results);
@@ -284,9 +288,9 @@
       return value<mid?'low':value<high?'mid':'high';
     }
     var nodes = document.getElementsByTagName('*'), i = nodes.length, nodecount = 0, ids = {}, multiIds = [], multiIdsElements = [],
-      empty = 0, deprecated = 0, whitespace = 0, textnodes = 0, comments = 0, deprecatedTags = {};
+      empty = 0, deprecated = 0, whitespace = 0, textnodes = 0, comments = 0, deprecatedTags = {}, emptyAttr = 0;
     while(i--) {
-      var tag = nodes[i].tagName.toLowerCase();
+      var tag = nodes[i].tagName.toLowerCase(), attribute;
       if (nodes[i].childNodes.length==0 && !(tag=='link' || tag=='br' || tag=='script' || tag=='meta' || tag=='img' ||
             tag=='a' || tag=='input' || tag=='hr' || tag=='param' || tag=='iframe' ||
             tag=='area' || tag=='base') && !((nodes[i].id||'') == '_firebugConsole')) {
@@ -299,14 +303,34 @@
         if(!deprecatedTags[tag]) deprecatedTags[tag] = true;
         deprecated++;
       }
-      
+
       if(nodes[i].id)
         if(ids[nodes[i].id]){
           multiIds.push(nodes[i].id);
           multiIdsElements.push(nodes[i]);
         }
-        else
-          ids[nodes[i].id] = true;
+        else ids[nodes[i].id] = true;
+
+      if(tag=='link' && /stylesheet|icon|shortcut|prefetch/.test(nodes[i].rel) && nodes[i].getAttribute('href') === ''){
+        if(JR._console) console.warn('Empty href attribute', nodes[i]);
+        emptyAttr++;
+      }
+      
+      if(tag=='html'){
+        attribute = nodes[i].attributes.getNamedItem('manifest');
+        if(attribute && attribute.value === ''){
+          if(JR._console) console.warn('Empty manifest attribute', nodes[i]);
+          emptyAttr++;
+        }
+      }
+      
+      if(tag=='video' || tag=='audio' || tag=='iframe' || tag=='input' || tag=='embed' || tag == 'img'){
+        attribute = nodes[i].attributes.getNamedItem('src');
+        if(attribute && attribute.value === '' ){
+          if(JR._console) console.warn('Empty src attribute', nodes[i]);
+          emptyAttr++;
+        }
+      }
     }
     function findWhitespaceTextnodes(element){
       if(element.childNodes.length>0)
@@ -341,6 +365,8 @@
       JR.tip(((whitespace/nodecount)*100).toFixed(1)+'% of nodes are whitespace-only text nodes.','Reducing the amount of whitespace, like line breaks and tab stops, can help improve the loading and DOM API performance of the page.');
     if(comments)
       JR.tip('There are '+comments+' HTML comments.','Removing the comments can help improve the loading and DOM API performance of the page.');
+    if(emptyAttr)
+      JR.warn('There are '+emptyAttr+' HTML elements with empty source attributes', 'Removing these nodes or updating the attributes will prevent double-loading of the page in some browsers. See this article for more information: '+dmlink('Empty image src can destroy your site','http://www.nczonline.net/blog/2009/11/30/empty-image-src-can-destroy-your-site/'))
   };
   
   JR.statsHTML = '';
@@ -477,11 +503,11 @@
   if(old) old.parentNode.removeChild(old);
   setTimeout(function(){
     if(JR._console)
-      JR.info('Check the Firebug console for detailed information on some of the tips.');
+      JR.info('Check the JavaScript console of your browser for detailed information on some of the tips.');
     try {
       JR.performanceTips();
     } catch(e) {
-      JR.info('Error '+e+' while analyzing page. Please let DOM Monster know about this problem!');
+      JR.info('Error '+e+' while analyzing page. '+dmlink('Please let the DOM Monster know about this problem', 'https://github.com/madrobby/dom-monster/issues') + '!');
     };
     var body = document.getElementsByTagName('body')[0], node = document.createElement('div');
     node.id = 'jr_results';
