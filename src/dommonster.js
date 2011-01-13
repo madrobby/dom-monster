@@ -237,8 +237,29 @@
       if(styleNodes>0)
         JR.tip('Reduce the number of tags that use the style attribute, replacing it with external CSS definitions.',styleNodes+' nodes use the style attribute.');
     }
+    function dontAtImport() {
+      var styles = document.getElementsByTagName('style'),
+        i = styles.length,
+        present = false;
+      if (i == 0) return;
+      while (i--) if (styles[i].innerHTML.indexOf('@import') != '-1') present = true;
+      if (present) 
+        JR.tip('Using @import in a style element will impact rendering performance.', 'Use the &lt;link&gt; tag instead. See '+dmlink('this article', 'http://www.stevesouders.com/blog/2009/04/09/dont-use-import/')+' for details.');
+    }
+    function checkForShadows() {
+      var stylesheets = document.styleSheets, shadowCount = 0;
+      for (var i = stylesheets.length - 1; i >= 0; i--) {
+        for (var x = stylesheets[i].cssRules.length - 1; x >= 0; x--) {
+          if (stylesheets[i].cssRules[x].cssText.indexOf('box-shadow') != '-1') shadowCount++;
+        }
+      }
+      if (shadowCount > 0) 
+        JR.tip('Using the box-shadow property can introduce serious scroll & resize lag in the browser.', 'Consider replacing with border-image or reducing the number of elements with shadows (currently: ' + shadowCount + ')');
+    }
     linkTagTips();
     styleAttributeTips();
+    dontAtImport();
+    checkForShadows();
   };
   
   // via https://gist.github.com/773044
