@@ -164,6 +164,11 @@
     if(typeof Ext === 'object' && Ext.version < '3.3.1')
       JR.tip("You are using the Ext JS v"+Ext.version+".","There's a newer version available, which potentially includes performance updates.");
   };
+
+	JR.webfontTips = function(){
+		if(typeof Typekit == 'object')
+			JR.warn("You are using the Typekit webfont service.","Using external webfont services can increase your page load times, as well as possible downtime if the service goes down.");
+	}
   
   JR.iFrameTips = function(){
     var nodes = document.getElementsByTagName('iframe');
@@ -449,6 +454,7 @@
   
     JR.doctypeTips();
     JR.frameworkTips();
+		JR.webfontTips();
     JR.scriptTagsTips();
     JR.iFrameTips();
     JR.cssTips();
