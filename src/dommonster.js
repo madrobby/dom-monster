@@ -166,10 +166,39 @@
   };
 
 	JR.webfontTips = function(){
-		if(typeof Typekit == 'object')
+		if(typeof Typekit == 'object'){
 			JR.warn("You are using the Typekit webfont service.","Using external webfont services can increase your page load times, as well as possible downtime if the service goes down.");
-	}
-  
+			return "";
+		}
+		
+		function isFontService(href){
+		if(href.indexOf("webtype.com") != -1 || href.indexOf("fontdeck.com") != -1 || href.indexOf("fontslive.com") != -1 ||
+		 		 href.indexOf("fonts.com") != -1 || href.indexOf("fonts.googleapis.com") || href.indexOf("kernest.com") ||
+				 href.indexOf("typotheque.com") != -1)
+			return true;
+		else
+			return false;
+		}
+		var styles = document.styleSheets, i = styles.length;
+		if(i==0) return;
+    while(i--) {
+			var href = styles[i].href||'', j = 0;
+			if(styles[i].rules) j = styles[i].rules.length;
+			if(isFontService(href)){
+			  JR.warn("You are using an external webfont service.","Using external webfont services can increase your page load times, as well as possible downtime if the service goes down.");
+				return "";
+			}
+			if(j==0) continue;
+			while(j--){
+				var href = styles[i].rules[j].href||'';
+				if(isFontService(href)){
+			  	JR.warn("You are using an external webfont service.","Using external webfont services can increase your page load times, as well as possible downtime if the service goes down.");
+					return "";
+				}
+			}
+		}
+  };
+
   JR.iFrameTips = function(){
     var nodes = document.getElementsByTagName('iframe');
     if(nodes.length>0 && nodes.length<4)
