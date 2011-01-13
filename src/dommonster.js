@@ -166,7 +166,7 @@
       JR.tip("You are using the Yahoo! User Interface Library 2 v"+YAHOO.env.getVersion('yahoo').version+".","There's a newer version available, which potentially includes performance updates.");
 
     // Version number on http://developer.yahoo.com/yui/3/
-    if('YUI' in window && typeof YUI == 'function' && YUI().version < '3.2.0')
+    if('YUI' in window && typeof YUI == 'function' && YUI().version < '3.3.0')
       JR.tip("You are using the Yahoo! User Interface Library 3 v"+YUI().version+".","There's a newer version available, which potentially includes performance updates.");
   
     // Version number on http://mootools.net/download
