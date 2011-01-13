@@ -247,9 +247,9 @@
         JR.tip('Using @import in a style element will impact rendering performance.', 'Use the &lt;link&gt; tag instead. See '+dmlink('this article', 'http://www.stevesouders.com/blog/2009/04/09/dont-use-import/')+' for details.');
     }
     function checkForShadows() {
-      var stylesheets = document.styleSheets, shadowCount = 0;
-      for (var i = stylesheets.length - 1; i >= 0; i--) {
-        for (var x = stylesheets[i].cssRules.length - 1; x >= 0; x--) {
+      var stylesheets = [].slice(document.styleSheets), shadowCount = 0;
+      for (var i = 0; i < stylesheets.length; i++) {
+        for (var x = 0; x < stylesheets[i].cssRules.length; x++) {
           if (stylesheets[i].cssRules[x].cssText.indexOf('box-shadow') != '-1') shadowCount++;
         }
       }
