@@ -189,10 +189,7 @@
       JR.tip("You are using the Typekit webfont service.", tiptext);
     
     function isFontService(href){
-      return (href.indexOf("webtype.com") != -1 || href.indexOf("fontdeck.com") != -1 || 
-        href.indexOf("fontslive.com") != -1 || href.indexOf("fonts.com") != -1 || 
-        href.indexOf("fonts.googleapis.com") || href.indexOf("kernest.com") ||
-        href.indexOf("typotheque.com") != -1);
+      return /(webtype|fontdeck|fontslive|fonts|fonts\.googleapis|kernest|typotheque)\.com/.test(href)
     }
     var styles = document.styleSheets, i = styles.length;
     if(i==0) return;
@@ -200,6 +197,7 @@
       var href = styles[i].href||'', j = 0;
       if(styles[i].rules) j = styles[i].rules.length;
       if(isFontService(href)){
+        console.log(href);
         JR.tip("You are using an external webfont service.", tiptext);
         return "";
       }
@@ -207,6 +205,7 @@
       while(j--){
         var href = styles[i].rules[j].href||'';
         if(isFontService(href)){
+          console.log(href);
           JR.tip("You are using an external webfont service.", tiptext);
           return "";
         }
