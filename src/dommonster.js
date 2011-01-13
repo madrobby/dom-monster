@@ -6,7 +6,7 @@
  */
 
 (function(){
-  if(!('JR' in window)) window.JR = { Version: '1.2.1' };
+  if(!('JR' in window)) window.JR = { Version: '1.2.2' };
   var JR = window.JR;
   
   function $(id){ return document.getElementById(id); }
