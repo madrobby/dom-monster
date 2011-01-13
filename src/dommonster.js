@@ -248,11 +248,12 @@
     }
     function checkForShadows() {
       var stylesheets = [].slice(document.styleSheets), shadowCount = 0;
-      for (var i = 0; i < stylesheets.length; i++) {
-        for (var x = 0; x < stylesheets[i].cssRules.length; x++) {
-          if (stylesheets[i].cssRules[x].cssText.indexOf('box-shadow') != '-1') shadowCount++;
-        }
-      }
+
+      for (var i = 0; i < stylesheets.length; i++)
+        if (stylesheets[i].cssRules)
+          for (var x = 0; x < stylesheets[i].cssRules.length; x++)
+            if (stylesheets[i].cssRules[x].cssText.indexOf('box-shadow') != '-1') shadowCount++;
+
       if (shadowCount > 0)
         JR.tip('Using the box-shadow property can introduce serious scroll & resize lag in the browser.', 'Consider replacing with border-image or reducing the number of elements with shadows (currently: ' + shadowCount + ')');
     }
