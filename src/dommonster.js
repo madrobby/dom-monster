@@ -180,6 +180,10 @@
     // Version number Extjs on http://www.sencha.com/products/js/download.php
     if(typeof Ext === 'object' && Ext.version < '3.3.1')
       JR.tip("You are using the Ext JS v"+Ext.version+".","There's a newer version available, which potentially includes performance updates.");
+
+    // Version number on http://rightjs.org/
+    if('RightJS' in window && RightJS.version < '2.1.1')
+      JR.tip("You are using the RightJS JavaScript framework v"+RightJS.version+".","There's a newer version available, which potentially includes performance updates.");
   };
 
   JR.webfontTips = function(){
