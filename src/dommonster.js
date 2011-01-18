@@ -10,6 +10,10 @@
   var JR = window.JR;
 
   function $(id){ return document.getElementById(id); }
+  
+  function $tagname(tagname){
+    return [].slice.call(document.getElementsByTagName(tagname));
+  }
 
   JR._lines = { info:[], tip:[], warn:[] };
   JR._console = ('console' in window && 'log' in console && 'warn' in console && 'info' in console);
@@ -97,8 +101,8 @@
   };
 
   JR.scriptTagsTips = function(){
-    var nodes = document.getElementsByTagName('script'),
-      head = document.head || document.getElementsByTagName('head')[0];
+    var nodes = $tagname('script'),
+      head = document.head || $tagname('head')[0];
 
     var count = 0, headcount = 0, i = nodes.length, sources = [], longInlines = [];
     while(i--){
@@ -218,7 +222,7 @@
   };
 
   JR.iFrameTips = function(){
-    var nodes = document.getElementsByTagName('iframe');
+    var nodes = $tagname('iframe');
     if(nodes.length>0 && nodes.length<4)
       JR.tip('Reduce the number of &lt;iframe&gt; tags.','There are '+nodes.length+' iframe elements on the page.');
     if(nodes.length>=4)
@@ -227,7 +231,7 @@
 
   JR.cssTips = function(){
     function linkTagTips(){
-    var nodes = [], links = document.getElementsByTagName('link'), i = links.length;
+    var nodes = [], links = $tagname('link'), i = links.length;
     if(i==0) return;
     while(i--) if((links[i].rel||'').toLowerCase()=='stylesheet') nodes.push(links[i]);
     if(nodes.length>1 && nodes.length<8)
@@ -236,13 +240,13 @@
       JR.warn('Reduce the number of &lt;link rel="stylesheet"&gt; tags','There are '+nodes.length+' external stylesheets loaded on the page.');
     }
     function styleAttributeTips(){
-      var nodes = document.getElementsByTagName('*'), i = nodes.length, styleNodes = 0;
+      var nodes = $tagname('*'), i = nodes.length, styleNodes = 0;
       while(i--) if(nodes[i].style.cssText.length > 0) styleNodes++;
       if(styleNodes>0)
         JR.tip('Reduce the number of tags that use the style attribute, replacing it with external CSS definitions.',styleNodes+' nodes use the style attribute.');
     }
     function dontAtImport() {
-      var styles = document.getElementsByTagName('style'),
+      var styles = $tagname('style'),
         i = styles.length,
         present = false;
       if (i == 0) return;
@@ -302,7 +306,7 @@
 
    JR.flashTips = function() {
      var nodes = [],
-     obj = document.getElementsByTagName('embed'),
+     obj = $tagname('embed'),
      i = obj.length;
 
      if (i) {
@@ -311,7 +315,7 @@
        }
      }
 
-     obj = document.getElementsByTagName('object');
+     obj = $tagname('object');
      i = obj.length;
      if (i) {
        while (i--) {
@@ -338,7 +342,7 @@
   },
 
   JR.opacityTips = function(){
-    var nodes = document.getElementsByTagName('*'), op = [], i = nodes.length;
+    var nodes = $tagname('*'), op = [], i = nodes.length;
     while(i--){
       var opacity = JR.getStyle(nodes[i],'opacity') || 1;
       if(opacity<1) {
@@ -357,7 +361,7 @@
     function level(value,mid,high){
       return value<mid?'low':value<high?'mid':'high';
     }
-    var nodes = [].slice(document.getElementsByTagName('*')), i = nodes.length, nodecount = 0, ids = {}, multiIds = [], multiIdsElements = [],
+    var nodes = $tagname('*'), i = nodes.length, nodecount = 0, ids = {}, multiIds = [], multiIdsElements = [],
       empty = 0, deprecated = 0, whitespace = 0, textnodes = 0, comments = 0, deprecatedTags = {}, emptyAttr = 0;
     while(i--) {
       var tag = nodes[i].tagName.toLowerCase(), attribute;
@@ -460,7 +464,7 @@
     }
 
     function nametag(attr){
-      var ele = nametag.cache = nametag.cache || document.getElementsByTagName('*'), i = ele.length;
+      var ele = nametag.cache = nametag.cache || $tagname('*'), i = ele.length;
       while(i--){
         if(ele[i].name && ele[i].name == attr)
           return true;
@@ -507,7 +511,7 @@
         while(node = node.parentNode){ counter++ };
       return counter;
     }
-    var nodes = document.getElementsByTagName('*'), nodeStats = [], i = nodes.length, average = 0, very = false;
+    var nodes = $tagname('*'), nodeStats = [], i = nodes.length, average = 0, very = false;
     while(i--) {
       average += parentNodes(nodes[i]);
       if(parentNodes(nodes[i])>15){
@@ -580,7 +584,7 @@
     } catch(e) {
       JR.info('Error '+e+' while analyzing page. '+dmlink('Please let the DOM Monster know about this problem', 'https://github.com/madrobby/dom-monster/issues') + '!');
     };
-    var body = document.getElementsByTagName('body')[0], node = document.createElement('div');
+    var body = $tagname('body')[0], node = document.createElement('div');
     node.id = 'jr_results';
     body.appendChild(node);
 
