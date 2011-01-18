@@ -467,7 +467,7 @@
     if(emptyAttr)
       JR.warn('There are '+emptyAttr+' HTML elements with empty source attributes', 'Removing these nodes or updating the attributes will prevent double-loading of the page in some browsers. See this article for more information: '+dmlink('Empty image src can destroy your site','http://www.nczonline.net/blog/2009/11/30/empty-image-src-can-destroy-your-site/'))
     if(js&&js_byte)
-      JR.tip('There are '+js+' HTML nodes with '+jsbyte+' bytes of inline JavaScript', 'Removing the inline JavaScript, or updating the attributes will improve the loading of the page.');
+      JR.tip('There are '+js+' HTML nodes with '+js_byte+' bytes of inline JavaScript', 'Removing the inline JavaScript, or updating the attributes will improve the loading of the page.');
     if(css&&css_byte)
       JR.tip('There are '+css+' HTML nodes with '+css_byte+' bytes of inline styles', 'Removing the inline styles, or updating the attributes will improve the loading of the page.');
   };
