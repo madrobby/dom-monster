@@ -248,7 +248,7 @@
           styleBytes += nodes[i].style.cssText.length + 8;
         }
       if(styleNodes>0)
-        JR.tip('Reduce the number of tags that use the style attribute, replacing it with external CSS definitions.',styleNodes+' nodes  use the style attribute resulting a total of '+styleBytes+' bytes.');
+        JR.tip('Reduce the number of tags that use the style attribute, replacing it with external CSS definitions.', styleNodes+' nodes use the style attribute, for a total of '+styleBytes+' bytes.');
     }
     function dontAtImport() {
       var styles = $tagname('style'),
@@ -463,9 +463,9 @@
     if(comments)
       JR.tip('There are '+comments+' HTML comments.','Removing the comments can help improve the loading and DOM API performance of the page.');
     if(emptyAttr)
-      JR.warn('There are '+emptyAttr+' HTML elements with empty source attributes', 'Removing these nodes or updating the attributes will prevent double-loading of the page in some browsers. See this article for more information: '+dmlink('Empty image src can destroy your site','http://www.nczonline.net/blog/2009/11/30/empty-image-src-can-destroy-your-site/'))
+      JR.warn('There are '+emptyAttr+' HTML elements with empty source attributes.', 'Removing these nodes or updating the attributes will prevent double-loading of the page in some browsers. See this article for more information: '+dmlink('Empty image src can destroy your site','http://www.nczonline.net/blog/2009/11/30/empty-image-src-can-destroy-your-site/'))
     if(js&&js_byte)
-      JR.tip('There are '+js+' HTML nodes with '+js_byte+' bytes of inline JavaScript', 'Removing the inline JavaScript, or updating the attributes will improve the loading of the page.');
+      JR.tip('There are '+js_byte+' bytes of inline JavaScript code in '+js+' HTML nodes.', 'Removing the inline JavaScript, or updating the attributes will improve the loading speed of the page.');
   };
 
   JR.statsHTML = '';
