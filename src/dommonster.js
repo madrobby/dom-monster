@@ -240,10 +240,15 @@
       JR.warn('Reduce the number of &lt;link rel="stylesheet"&gt; tags','There are '+nodes.length+' external stylesheets loaded on the page.');
     }
     function styleAttributeTips(){
-      var nodes = $tagname('*'), i = nodes.length, styleNodes = 0;
-      while(i--) if(nodes[i].style.cssText.length > 0) styleNodes++;
+      var nodes = $tagname('*'), i = nodes.length, styleNodes = 0, styleBytes = 0;
+      while(i--)
+        if(nodes[i].style.cssText.length > 0){
+          if(JR._console) console.warn('Inline style', nodes[i]);
+          styleNodes++;
+          styleBytes += nodes[i].style.cssText.length + 8;
+        }
       if(styleNodes>0)
-        JR.tip('Reduce the number of tags that use the style attribute, replacing it with external CSS definitions.',styleNodes+' nodes use the style attribute.');
+        JR.tip('Reduce the number of tags that use the style attribute, replacing it with external CSS definitions.',styleNodes+' nodes  use the style attribute resulting a total of '+styleBytes+' bytes.');
     }
     function dontAtImport() {
       var styles = $tagname('style'),
@@ -363,7 +368,7 @@
     }
     var nodes = $tagname('*'), i = nodes.length, nodecount = 0, ids = {}, multiIds = [], multiIdsElements = [],
       empty = 0, deprecated = 0, whitespace = 0, textnodes = 0, comments = 0, deprecatedTags = {}, emptyAttr = 0,
-      css_byte = 0, js_byte = 0, css = 0, js = 0,
+      js_byte = 0, js = 0,
       inlinejs = ['mouseover', 'mouseout','mousedown', 'mouseup','click','dblclick','mousemove', 'load','error','beforeunload','focus','blur','touchstart','touchend','touchmove'];
       
     while(i--) {
@@ -423,13 +428,6 @@
         js++;
         js_byte += nodes[i].href.length;
       }
-      
-      attribute = nodes[i].getAttribute('style');
-      if(attribute){
-        if(JR._console) console.warn('Inline style', nodes[i]);
-        css++
-        css_byte += attribute.length + 8;
-      }
     }
     function findWhitespaceTextnodes(element){
       if(element.childNodes.length>0)
@@ -468,8 +466,6 @@
       JR.warn('There are '+emptyAttr+' HTML elements with empty source attributes', 'Removing these nodes or updating the attributes will prevent double-loading of the page in some browsers. See this article for more information: '+dmlink('Empty image src can destroy your site','http://www.nczonline.net/blog/2009/11/30/empty-image-src-can-destroy-your-site/'))
     if(js&&js_byte)
       JR.tip('There are '+js+' HTML nodes with '+js_byte+' bytes of inline JavaScript', 'Removing the inline JavaScript, or updating the attributes will improve the loading of the page.');
-    if(css&&css_byte)
-      JR.tip('There are '+css+' HTML nodes with '+css_byte+' bytes of inline styles', 'Removing the inline styles, or updating the attributes will improve the loading of the page.');
   };
 
   JR.statsHTML = '';
