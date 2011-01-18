@@ -1,6 +1,6 @@
 require 'rake'
 
-DOMMONSTER_VERSION  = "1.2.2"
+DOMMONSTER_VERSION  = "1.2.3"
 
 DOMMONSTER_ROOT     = File.expand_path(File.dirname(__FILE__))
 DOMMONSTER_SRC_DIR  = File.join(DOMMONSTER_ROOT, 'src')
