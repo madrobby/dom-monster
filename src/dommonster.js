@@ -362,9 +362,12 @@
       return value<mid?'low':value<high?'mid':'high';
     }
     var nodes = $tagname('*'), i = nodes.length, nodecount = 0, ids = {}, multiIds = [], multiIdsElements = [],
-      empty = 0, deprecated = 0, whitespace = 0, textnodes = 0, comments = 0, deprecatedTags = {}, emptyAttr = 0;
+      empty = 0, deprecated = 0, whitespace = 0, textnodes = 0, comments = 0, deprecatedTags = {}, emptyAttr = 0,
+      css_byte = 0, js_byte = 0, css = 0, js = 0,
+      inlinejs = ['mouseover', 'mouseout','mousedown', 'mouseup','click','dblclick','mousemove', 'load','error','beforeunload','focus','blur','touchstart','touchend','touchmove'];
+      
     while(i--) {
-      var tag = nodes[i].tagName.toLowerCase(), attribute;
+      var tag = nodes[i].tagName.toLowerCase(), attribute, j = inlinejs.length;
       if (nodes[i].childNodes.length==0 && !(tag=='link' || tag=='br' || tag=='script' || tag=='meta' || tag=='img' ||
             tag=='a' || tag=='input' || tag=='hr' || tag=='param' || tag=='iframe' ||
             tag=='area' || tag=='base') && !((nodes[i].id||'') == '_firebugConsole')) {
@@ -405,6 +408,28 @@
           emptyAttr++;
         }
       }
+      
+      while( j-- ){
+        attribute = nodes[i].getAttribute('on'+inlinejs[j]);
+        if(attribute){
+            if(JR._console) console.warn('Inline JavaScript', nodes[i]);
+            js_byte += 5 + attribute.length + inlinejs[j].length;
+            js++;
+        }
+      }
+      
+      if(nodes[i].href && nodes[i].href.toLowerCase().indexOf( "javascript:" ) == 0 ){
+        if(JR._console) console.warn('Inline JavaScript', nodes[i]);
+        js++;
+        js_byte += nodes[i].href.length;
+      }
+      
+      attribute = nodes[i].getAttribute('style');
+      if(attribute){
+        if(JR._console) console.warn('Inline style', nodes[i]);
+        css++
+        css_byte += attribute.length + 8;
+      }
     }
     function findWhitespaceTextnodes(element){
       if(element.childNodes.length>0)
@@ -441,6 +466,10 @@
       JR.tip('There are '+comments+' HTML comments.','Removing the comments can help improve the loading and DOM API performance of the page.');
     if(emptyAttr)
       JR.warn('There are '+emptyAttr+' HTML elements with empty source attributes', 'Removing these nodes or updating the attributes will prevent double-loading of the page in some browsers. See this article for more information: '+dmlink('Empty image src can destroy your site','http://www.nczonline.net/blog/2009/11/30/empty-image-src-can-destroy-your-site/'))
+    if(js&&js_byte)
+      JR.tip('There are '+js+' HTML nodes with '+jsbyte+' bytes of inline JavaScript', 'Removing the inline JavaScript, or updating the attributes will improve the loading of the page.');
+    if(css&&css_byte)
+      JR.tip('There are '+css+' HTML nodes with '+css_byte+' bytes of inline styles', 'Removing the inline styles, or updating the attributes will improve the loading of the page.');
   };
 
   JR.statsHTML = '';
