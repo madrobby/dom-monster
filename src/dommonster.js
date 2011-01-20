@@ -27,6 +27,16 @@
   function dmlink(str, url){
     return '<a style="'+JR.reset+'text-decoration:underline;color:#844" href="'+url+'">'+html(str)+'</a>';
   }
+  
+  function unique(arr){
+    var hash={}, result=[];
+    for (var i=0, l=arr.length; i<l; ++i)
+      if(!hash.hasOwnProperty(arr[i])){
+        hash[arr[i]]=true;
+        result.push(arr[i]);
+      }
+    return result;
+  }
 
   JR.close = function(){
     var results = $('jr_results_tips');
@@ -456,7 +466,8 @@
     }
     if(multiIds.length > 0){
       JR.warn('There '+((multiIds.length==1)?'is ':'are ')+multiIds.length+' duplicate id'+((multiIds.length>1)?'s':'')+' for nodes in your document.', 'Node ids must be unique within the HTML document. See JavaScript console for details.');
-      if(JR._console) console.warn('Nodes with duplicate ids found', multiIdsElements);
+      if(JR._console) console.warn('Duplicate element ids found', unique(multiIds));
+      if(JR._console) console.warn('Nodes affected by duplicate ids', multiIdsElements);
     }
     if(whitespace)
       JR.tip(((whitespace/nodecount)*100).toFixed(1)+'% of nodes are whitespace-only text nodes.','Reducing the amount of whitespace, like line breaks and tab stops, can help improve the loading and DOM API performance of the page.');
