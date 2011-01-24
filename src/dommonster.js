@@ -9,7 +9,7 @@
   var JR = { Version: '1.2.4' };
 
   function $(id){ return document.getElementById(id); }
-  
+
   function $tagname(tagname){
     return [].slice.call(document.getElementsByTagName(tagname));
   }
@@ -26,7 +26,7 @@
   function dmlink(str, url){
     return '<a style="'+JR.reset+'text-decoration:underline;color:#844" href="'+url+'">'+html(str)+'</a>';
   }
-  
+
   function unique(arr){
     var hash={}, result=[];
     for (var i=0, l=arr.length; i<l; ++i)
@@ -379,7 +379,7 @@
       empty = 0, deprecated = 0, whitespace = 0, textnodes = 0, comments = 0, deprecatedTags = {}, emptyAttr = 0,
       js_byte = 0, js = 0,
       inlinejs = ['mouseover', 'mouseout','mousedown', 'mouseup','click','dblclick','mousemove', 'load','error','beforeunload','focus','blur','touchstart','touchend','touchmove'];
-      
+
     var DEPRECATED = ("font center strike u dir applet acronym bgsound isindex layer ilayer nolayer listing marquee nobr " +
       "noembed plaintext spacer xml xmp").split(' ');
 
@@ -427,7 +427,7 @@
           emptyAttr++;
         }
       }
-      
+
       while( j-- ){
         attribute = nodes[i].getAttribute('on'+inlinejs[j]);
         if(attribute){
@@ -436,7 +436,7 @@
             js++;
         }
       }
-      
+
       if(nodes[i].href && nodes[i].href.toLowerCase().indexOf( "javascript:" ) == 0 ){
         if(JR._console) console.warn('Inline JavaScript', nodes[i]);
         js++;
