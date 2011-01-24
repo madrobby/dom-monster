@@ -6,8 +6,7 @@
  */
 
 (function(){
-  if(!('JR' in window)) window.JR = { Version: '1.2.3' };
-  var JR = window.JR;
+  var JR = { Version: '1.2.4' };
 
   function $(id){ return document.getElementById(id); }
   
@@ -381,6 +380,9 @@
       js_byte = 0, js = 0,
       inlinejs = ['mouseover', 'mouseout','mousedown', 'mouseup','click','dblclick','mousemove', 'load','error','beforeunload','focus','blur','touchstart','touchend','touchmove'];
       
+    var DEPRECATED = ("font center strike u dir applet acronym bgsound isindex layer ilayer nolayer listing marquee nobr " +
+      "noembed plaintext spacer xml xmp").split(' ');
+
     while(i--) {
       var tag = nodes[i].tagName.toLowerCase(), attribute, j = inlinejs.length;
       if (nodes[i].childNodes.length==0 && !(tag=='link' || tag=='br' || tag=='script' || tag=='meta' || tag=='img' ||
@@ -390,7 +392,9 @@
         empty++;
       }
 
-      if (tag=='font' || tag=='center' || tag=='s' || tag=='strike' || tag=='u' || tag=='dir' || tag=='applet'){
+      if(DEPRECATED.indexOf(tag)>-1) {
+        console.log(tag);
+        console.log(DEPRECATED.indexOf(tag));
         if(JR._console) console.warn('Deprecated node', nodes[i]);
         if(!deprecatedTags[tag]) deprecatedTags[tag] = true;
         deprecated++;
@@ -462,7 +466,7 @@
     if(deprecated) {
       var tags = [];
       for(tag in deprecatedTags) tags.push(tag.toUpperCase());
-      JR.tip('There are '+deprecated+' nodes which use a deprecated tag name ('+tags.join(', ')+').','Try updating this content to HTML4.');
+      JR.tip('There are '+deprecated+' nodes which use a deprecated tag name ('+tags.join(', ')+').','Try updating this content to HTML5.');
     }
     if(multiIds.length > 0){
       JR.warn('There '+((multiIds.length==1)?'is ':'are ')+multiIds.length+' duplicate id'+((multiIds.length>1)?'s':'')+' for nodes in your document.', 'Node ids must be unique within the HTML document. See JavaScript console for details.');
@@ -638,7 +642,7 @@
           '<div style="'+JR.reset+'cursor:pointer;float:right;padding:5px 10px 3px 10px;height:15px;background:#b42328;-webkit-border-radius:5px;color:#fff;text-shadow:0px 1px 3px rgba(0,0,0,0.5)" onclick="location.href=\'http://mir.aculo.us/dom-monster/\'">'+
             'dom monster <span style="'+JR.reset+'font-size:10px">v'+JR.Version+'</span>'+
           '</div>'+
-          '<div style="'+JR.reset+'color:#888;float:right;padding:7px 10px 0px 10px;font-size:10px;text-decoration:underline;cursor:pointer" onclick="JR.close()">'+
+          '<div style="'+JR.reset+'color:#888;float:right;padding:7px 10px 0px 10px;font-size:10px;text-decoration:underline;cursor:pointer" onclick="var r=document.getElementById(\'jr_results_tips\');r.parentNode.removeChild(r);">'+
             'close'+
           '</div>'+
         '</div>'+
