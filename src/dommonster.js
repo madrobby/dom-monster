@@ -633,7 +633,7 @@
       'color:#444;font:12px/13px \'Helvetica Neue\', Verdana, Arial, sans serif;'+
       'width:80%;left:10%';
     node.innerHTML =
-      '<div id="jr_results_tips" style="'+JR.reset+'max-height:400px;margin:10px;padding:5px;overflow:auto;background:#fff;border:2px solid #b42328;-moz-border-radius:9px;-webkit-border-radius:9px;-webkit-box-shadow: 0px 2px 40px rgba(0,0,0,0.5);">' +
+      '<div id="jr_results_tips" style="'+JR.reset+'max-height:400px;margin:10px;padding:5px;overflow:auto;background:#fff;border:2px solid #b42328;-moz-border-radius:9px;-webkit-border-radius:9px;-webkit-box-shadow: 0px 2px 40px rgba(0,0,0,0.5);-webkit-transition:-webkit-transform ease-out 0.3s;-webkit-transform:translateY(450px)">' +
         '<div style="'+JR.reset+'height:23px;font-size:16px;font-weight:normal;margin-top:0px;margin-bottom:5px;color:#444">'+
           '<div style="'+JR.reset+'float:left;padding:5px 0px 3px 5px" id="jr_results_prognosis_container">'+
             '<span id="jr_results_prognosis" style="'+JR.reset+'"></span> '+
@@ -650,5 +650,8 @@
         '</div>'+
       '</div>';
     JR.flush();
+    setTimeout(function(){
+      $('jr_results_tips').style.cssText += ';-webkit-transform:translateY(0px)';
+    }, 10);
   },10);
  })();
