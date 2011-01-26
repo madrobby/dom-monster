@@ -6,7 +6,7 @@
  */
 
 (function(){
-  var JR = { Version: '1.2.4' };
+  var JR = { Version: '1.2.5' };
 
   function $(id){ return document.getElementById(id); }
 
@@ -463,7 +463,7 @@
       }
     }
     findWhitespaceTextnodes(document);
-    
+
     var contentPercent = textnodeLength/document.body.innerHTML.length*100
 
     JR.stats(nodecount, 'nodes', level(nodecount,1500,3000));
