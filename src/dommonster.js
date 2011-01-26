@@ -375,9 +375,12 @@
     function level(value,mid,high){
       return value<mid?'low':value<high?'mid':'high';
     }
+    function revlevel(value,mid,high){
+      return value<mid?'high':value<high?'mid':'low';
+    }
     var nodes = $tagname('*'), i = nodes.length, nodecount = 0, ids = {}, multiIds = [], multiIdsElements = [],
       empty = 0, deprecated = 0, whitespace = 0, textnodes = 0, comments = 0, deprecatedTags = {}, emptyAttr = 0,
-      js_byte = 0, js = 0,
+      js_byte = 0, js = 0, textnodeLength = 0,
       inlinejs = ['mouseover', 'mouseout','mousedown', 'mouseup','click','dblclick','mousemove', 'load','error','beforeunload','focus','blur','touchstart','touchend','touchmove'];
 
     var DEPRECATED = ("font center strike u dir applet acronym bgsound isindex layer ilayer nolayer listing marquee nobr " +
@@ -454,13 +457,19 @@
         // if(JR._console) console.warn('Whitespace-only text node', element);
         whitespace++;
       }
-      if(element.nodeType==3)
+      if(element.nodeType==3){
         textnodes++;
+        textnodeLength += element.nodeValue.length;
+      }
     }
     findWhitespaceTextnodes(document);
+    
+    var contentPercent = textnodeLength/document.body.innerHTML.length*100
 
     JR.stats(nodecount, 'nodes', level(nodecount,1500,3000));
     JR.stats(textnodes, 'text nodes', level(textnodes,750,1500));
+    JR.stats((textnodeLength/1024).toFixed(1)+'k', 'text node size', level(textnodeLength,80000,500000));
+    JR.stats(contentPercent.toFixed(2)+'%', 'content percentage', revlevel(contentPercent, 25, 50));
 
     if(empty) JR.tip('There are '+empty+' empty nodes.','Removing them might improve performance.');
     if(deprecated) {
