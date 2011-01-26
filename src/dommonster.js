@@ -90,12 +90,12 @@
   JR.tip = function(string, hint){ JR.log(string,hint,'tip'); };
   JR.info = function(string, hint){ JR.log(string,hint,'info'); };
   JR.warn = function(string, hint){ JR.log(string,hint,'warn'); };
-  
+
   JR.trace = function(msgs){
     var formatted = "";
     for(var i=0;i<msgs.length;i++)
       formatted += html(msgs[i]) + '<br>';
-      
+
     JR._lines['info'].push(
       '<div style="'+JR.reset+';font-family:monospace;border:1px solid #888;padding:5px">'+formatted+'</div>'
     );
@@ -449,7 +449,8 @@
         }
       }
 
-      if(nodes[i].href && nodes[i].href.toLowerCase().indexOf( "javascript:" ) == 0 ){
+      // additional toLowerCase check prevents SVG problem, #29
+      if(nodes[i].href && nodes[i].href.toLowerCase && nodes[i].href.toLowerCase().indexOf( "javascript:" ) == 0 ){
         if(JR._console) console.warn('Inline JavaScript', nodes[i]);
         js++;
         js_byte += nodes[i].href.length;
@@ -637,7 +638,7 @@
   if(old) old.parentNode.removeChild(old);
   setTimeout(function(){
     var error;
-    
+
     if(JR._console)
       JR.info('Check the JavaScript console of your browser for detailed information on some of the tips.');
     try {
@@ -649,7 +650,7 @@
       JR.info('Error while analyzing page. '+
         dmlink('Please let the DOM Monster know about this problem', 'https://github.com/madrobby/dom-monster/issues') + '!',
         '(Please include the information below)');
-        
+
       JR.trace(
         [
           'Location: '+location.href,
@@ -687,8 +688,8 @@
     }, 10);
   },10);
  })();
- 
- 
+
+
   // https://github.com/emwendelin/javascript-stacktrace
  //
  // Domain Public by Eric Wendelin http://eriwen.com/ (2008)
@@ -738,11 +739,11 @@
  // OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
  /**
-  * Main function giving a function stack trace with a forced or passed in Error 
+  * Main function giving a function stack trace with a forced or passed in Error
   *
   * @cfg {Error} e The error to create a stacktrace from (optional)
   * @cfg {Boolean} guess If we should try to resolve the names of anonymous functions
-  * @return {Array} of Strings with functions, lines, files, and arguments where possible 
+  * @return {Array} of Strings with functions, lines, files, and arguments where possible
   */
  function printStackTrace(options) {
      var ex = (options && options.e) ? options.e : null;
@@ -793,7 +794,7 @@
      /**
       * Given a context, function name, and callback function, overwrite it so that it calls
       * printStackTrace() first with a callback and then runs the rest of the body.
-      * 
+      *
       * @param {Object} context of execution (e.g. window)
       * @param {String} functionName to instrument
       * @param {Function} function to call with a stack trace on invocation
@@ -801,7 +802,7 @@
      instrumentFunction: function(context, functionName, callback) {
          context = context || window;
          context['_old' + functionName] = context[functionName];
-         context[functionName] = function() { 
+         context[functionName] = function() {
              callback.call(this, printStackTrace());
              return context['_old' + functionName].apply(this, arguments);
          };
@@ -826,7 +827,7 @@
 
      /**
       * Given an Error object, return a formatted Array based on Chrome's stack string.
-      * 
+      *
       * @param e - Error object to inspect
       * @return Array<String> of function calls, files and line numbers
       */
@@ -836,7 +837,7 @@
 
      /**
       * Given an Error object, return a formatted Array based on Firefox's stack string.
-      * 
+      *
       * @param e - Error object to inspect
       * @return Array<String> of function calls, files and line numbers
       */
@@ -846,7 +847,7 @@
 
      /**
       * Given an Error object, return a formatted Array based on Opera 10's stacktrace string.
-      * 
+      *
       * @param e - Error object to inspect
       * @return Array<String> of function calls, files and line numbers
       */
@@ -869,8 +870,8 @@
 
      // Opera 7.x-9.x only!
      opera: function(e) {
-         var lines = e.message.split('\n'), ANON = '{anonymous}', 
-             lineRE = /Line\s+(\d+).*script\s+(http\S+)(?:.*in\s+function\s+(\S+))?/i, 
+         var lines = e.message.split('\n'), ANON = '{anonymous}',
+             lineRE = /Line\s+(\d+).*script\s+(http\S+)(?:.*in\s+function\s+(\S+))?/i,
              i, j, len;
 
          for (i = 4, j = 0, len = lines.length; i < len; i += 2) {
