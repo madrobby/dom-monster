@@ -542,6 +542,8 @@
   };
 
   JR.performanceTips = function(){
+    JR.cssTips();
+
     function level(value,mid,high){
       return value<mid?'low':value<high?'mid':'high';
     }
@@ -592,7 +594,6 @@
     JR.webfontTips();
     JR.scriptTagsTips();
     JR.iFrameTips();
-    JR.cssTips();
     JR.opacityTips();
     JR.flashTips();
     JR.globals();
