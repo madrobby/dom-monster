@@ -396,7 +396,7 @@
 
     var DEPRECATED = ("font center strike u dir applet acronym bgsound isindex layer ilayer nolayer listing marquee nobr " +
       "noembed plaintext spacer xml xmp").split(' ');
-      
+
     var INVALID_FOR_TEXTNODES = ("script style").split(' ');
 
     while(i--) {
@@ -656,7 +656,7 @@
       JR.trace(
         [
           'Location: '+location.href,
-          'User agent: '+navigator.userAgent,
+          'User agent: '+navigator.userAgent
         ].concat(printStackTrace({e:error})));
     }
     var body = $tagname('body')[0], node = document.createElement('div');

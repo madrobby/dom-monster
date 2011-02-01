@@ -40,10 +40,17 @@ task :concat => :whitespace do
   end
 end
 
-def uglifyjs(src, target)
-  puts "Minifying #{src} with UglifyJS web service..."
-  `curl -s --data-urlencode js_code@#{src} http://marijnhaverbeke.nl/uglifyjs > #{target}`
+# Service is down as of Feb 1, 2011
+#def uglifyjs(src, target)
+#  puts "Minifying #{src} with UglifyJS web service..."
+#  `curl -s --data-urlencode js_code@#{src} http://marijnhaverbeke.nl/uglifyjs > #{target}`
+#end
+
+def google_compiler(src, target)
+  puts "Minifying #{src} with Google Closure Compiler..."
+  `java -jar vendor/google-compiler/compiler.jar --js #{src} --summary_detail_level 3 --js_output_file #{target}`
 end
+
 
 def process_minified(src, target)
   cp target, File.join(DOMMONSTER_DIST_DIR,'temp.js')
@@ -62,6 +69,6 @@ end
 desc "Generates a minified version for distribution."
 task :dist do
   src, target = File.join(DOMMONSTER_DIST_DIR,'dommonster.js'), File.join(DOMMONSTER_DIST_DIR,'dommonster.min.js')
-  uglifyjs src, target
+  google_compiler src, target
   process_minified src, target
 end
