@@ -3,11 +3,14 @@
  * Copyright (c) 2009-2011 Amy Hoy & Thomas Fuchs
  * This code is licensed under the terms of the MIT LICENSE
  * http://mir.aculo.us/dom-monster
+ *
+ * includes JAVASCRIPT STACKTRACE
+ * see https://github.com/emwendelin/javascript-stacktrace
+ * for license information
  */
 
-
 (function(){
-  var JR = { Version: '1.2.6' };
+  var JR = { Version: '1.2.7' };
 
   function $(id){ return document.getElementById(id); }
 
@@ -694,62 +697,6 @@
   },10);
  })();
 
-
-  // https://github.com/emwendelin/javascript-stacktrace
- //
- // Domain Public by Eric Wendelin http://eriwen.com/ (2008)
- //                  Luke Smith http://lucassmith.name/ (2008)
- //                  Loic Dachary <loic@dachary.org> (2008)
- //                  Johan Euphrosine <proppy@aminche.com> (2008)
- //                  Øyvind Sean Kinsey http://kinsey.no/blog (2010)
- //                  Victor Homyakov (2010)
- //
- // Information and discussions
- // http://jspoker.pokersource.info/skin/test-printstacktrace.html
- // http://eriwen.com/javascript/js-stack-trace/
- // http://eriwen.com/javascript/stacktrace-update/
- // http://pastie.org/253058
- //
- // guessFunctionNameFromLines comes from firebug
- //
- // Software License Agreement (BSD License)
- //
- // Copyright (c) 2007, Parakey Inc.
- // All rights reserved.
- //
- // Redistribution and use of this software in source and binary forms, with or without modification,
- // are permitted provided that the following conditions are met:
- //
- // * Redistributions of source code must retain the above
- //   copyright notice, this list of conditions and the
- //   following disclaimer.
- //
- // * Redistributions in binary form must reproduce the above
- //   copyright notice, this list of conditions and the
- //   following disclaimer in the documentation and/or other
- //   materials provided with the distribution.
- //
- // * Neither the name of Parakey Inc. nor the names of its
- //   contributors may be used to endorse or promote products
- //   derived from this software without specific prior
- //   written permission of Parakey Inc.
- //
- // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
- // IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- // FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
- // CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- // DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- // DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
- // IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
- // OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
- /**
-  * Main function giving a function stack trace with a forced or passed in Error
-  *
-  * @cfg {Error} e The error to create a stacktrace from (optional)
-  * @cfg {Boolean} guess If we should try to resolve the names of anonymous functions
-  * @return {Array} of Strings with functions, lines, files, and arguments where possible
-  */
  function printStackTrace(options) {
      var ex = (options && options.e) ? options.e : null;
      var guess = options ? !!options.guess : true;

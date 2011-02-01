@@ -1,6 +1,6 @@
 require 'rake'
 
-DOMMONSTER_VERSION  = "1.2.6"
+DOMMONSTER_VERSION  = "1.2.7"
 
 DOMMONSTER_ROOT     = File.expand_path(File.dirname(__FILE__))
 DOMMONSTER_SRC_DIR  = File.join(DOMMONSTER_ROOT, 'src')
@@ -40,17 +40,21 @@ task :concat => :whitespace do
   end
 end
 
-# Service is down as of Feb 1, 2011
-#def uglifyjs(src, target)
-#  puts "Minifying #{src} with UglifyJS web service..."
-#  `curl -s --data-urlencode js_code@#{src} http://marijnhaverbeke.nl/uglifyjs > #{target}`
-#end
-
-def google_compiler(src, target)
-  puts "Minifying #{src} with Google Closure Compiler..."
-  `java -jar vendor/google-compiler/compiler.jar --js #{src} --summary_detail_level 3 --js_output_file #{target}`
+def uglifyjs(src, target)
+  begin
+    require 'uglifier'
+  rescue LoadError => e
+    if verbose
+      puts "\nYou'll need the 'uglifier' gem for minification. Just run:\n\n"
+      puts "  $ gem install uglifier"
+      puts "\nand you should be all set.\n\n"
+      exit
+    end
+    return false
+  end
+  puts "Minifying #{src} with UglifyJS..."
+  File.open(target, "w"){|f| f.puts Uglifier.new.compile(File.read(src))}
 end
-
 
 def process_minified(src, target)
   cp target, File.join(DOMMONSTER_DIST_DIR,'temp.js')
@@ -69,6 +73,6 @@ end
 desc "Generates a minified version for distribution."
 task :dist do
   src, target = File.join(DOMMONSTER_DIST_DIR,'dommonster.js'), File.join(DOMMONSTER_DIST_DIR,'dommonster.min.js')
-  google_compiler src, target
+  uglifyjs src, target
   process_minified src, target
 end
