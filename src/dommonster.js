@@ -187,11 +187,11 @@
 
     // Version number on http://jquery.com/
     if(typeof jQuery == 'function' ){
-      if(jQuery.prototype.jquery < '1.4.4')
+      if(jQuery.prototype.jquery < '1.5.0')
         JR.tip("You are using the jQuery JavaScript framework v"+jQuery.prototype.jquery+".","There's a newer version available, which potentially includes performance updates.");
 
       // Version number on http://jqueryui.com/home
-      if(jQuery.ui && jQuery.ui.version < '1.8.7')
+      if(jQuery.ui && jQuery.ui.version < '1.8.9')
         JR.tip("You are using the jQuery UI JavaScript framework v"+jQuery.ui.version+".","There's a newer version available, which potentially includes performance updates.");
     }
 
