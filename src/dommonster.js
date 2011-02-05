@@ -165,8 +165,15 @@
     if(longInlines.length>0)
       JR.tip('Found ' + longInlines.length + ' big (>=2kB) inline script'+((longInlines.length>1)?'s':'')+'.', 'Try to avoid big inline scripts, they block rendering and won\'t get cached.');
 
-    if(headcount>0)
-      JR.tip('<span style="cursor:help" title="'+sources.join('\n')+'">Found '+headcount+' &lt;script&gt; tags in HEAD.</span>','For better perceived loading performance move script tags to end of document.');
+    JR.noLoaders = function() {
+      var loaders = ['head', 'yepnope', '$LAB', 'jsl', 'JSLoader'];
+      for (loader in loaders)
+        if (loaders[loader] in window) return false;
+      return true;
+    }
+
+    if(headcount>0 && JR.noLoaders())
+      JR.tip('<span style="cursor:help" title="'+sources.join('\n')+'">Found '+headcount+' &lt;script&gt; tags in HEAD.</span>','For better perceived loading performance move script tags to end of document or use a non-blocking JS loader like <a href="http://headjs.com">head.js</a>.');
   };
 
   JR.frameworkTips = function(){
@@ -180,11 +187,11 @@
 
     // Version number on http://jquery.com/
     if(typeof jQuery == 'function' ){
-      if(jQuery.prototype.jquery < '1.4.4')
+      if(jQuery.prototype.jquery < '1.5.0')
         JR.tip("You are using the jQuery JavaScript framework v"+jQuery.prototype.jquery+".","There's a newer version available, which potentially includes performance updates.");
 
       // Version number on http://jqueryui.com/home
-      if(jQuery.ui && jQuery.ui.version < '1.8.7')
+      if(jQuery.ui && jQuery.ui.version < '1.8.9')
         JR.tip("You are using the jQuery UI JavaScript framework v"+jQuery.ui.version+".","There's a newer version available, which potentially includes performance updates.");
     }
 
@@ -209,7 +216,7 @@
       JR.tip("You are using the Ext JS v"+Ext.version+".","There's a newer version available, which potentially includes performance updates.");
 
     // Version number on http://rightjs.org/
-    if('RightJS' in window && RightJS.version < '2.2.0')
+    if('RightJS' in window && RightJS.version < '2.2.1')
       JR.tip("You are using the RightJS JavaScript framework v"+RightJS.version+".","There's a newer version available, which potentially includes performance updates.");
   };
 
