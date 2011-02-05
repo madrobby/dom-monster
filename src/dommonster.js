@@ -166,14 +166,20 @@
       JR.tip('Found ' + longInlines.length + ' big (>=2kB) inline script'+((longInlines.length>1)?'s':'')+'.', 'Try to avoid big inline scripts, they block rendering and won\'t get cached.');
 
     JR.noLoaders = function() {
-      var loaders = ['head', 'yepnope', '$LAB', 'jsl', 'JSLoader'];
-      for (loader in loaders)
-        if (loaders[loader] in window) return false;
-      return true;
+      var loaders = ['head', 'yepnope', '$LAB', 'jsl', 'JSLoader'], r = true;
+      for (var i=0;i<loaders.length;i++)
+        if (loaders[i] in window) {
+          JR.tip("You're using "+loaders[i]+", a JavaScript loader library.",
+            "Often you can achieve the best performance and compression by serving a single "+
+            "concatenated JavaScript file instead; however, your page might be more responsive with "+
+            "a loader library.");
+          r = false;
+        }
+      return r;
     }
 
     if(headcount>0 && JR.noLoaders())
-      JR.tip('<span style="cursor:help" title="'+sources.join('\n')+'">Found '+headcount+' &lt;script&gt; tags in HEAD.</span>','For better perceived loading performance move script tags to end of document or use a non-blocking JS loader like <a href="http://headjs.com">head.js</a>.');
+      JR.tip('<span style="cursor:help" title="'+sources.join('\n')+'">Found '+headcount+' &lt;script&gt; tags in HEAD.</span>','For better perceived loading performance move script tags to end of document; or use a non-blocking JS loader library.');
   };
 
   JR.frameworkTips = function(){
