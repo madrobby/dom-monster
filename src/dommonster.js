@@ -228,7 +228,7 @@
       var href = styles[i].href||'', j = 0;
       if(styles[i].rules) j = styles[i].rules.length;
       if(isFontService(href)){
-        console.log(href);
+        if(JR._console) console.log(href);
         JR.tip("You are using an external webfont service.", tiptext);
         return "";
       }
@@ -236,7 +236,7 @@
       while(j--){
         var href = styles[i].rules[j].href||'';
         if(isFontService(href)){
-          console.log(href);
+          if(JR._console) console.log(href);
           JR.tip("You are using an external webfont service.", tiptext);
           return "";
         }
