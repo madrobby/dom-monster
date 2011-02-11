@@ -10,7 +10,7 @@
  */
 
 (function(){
-  var JR = { Version: '1.2.8' };
+  var JR = { Version: '1.3.0a1' };
 
   function $(id){ return document.getElementById(id); }
 
@@ -40,6 +40,69 @@
       }
     return result;
   }
+
+  JR.saveResults = function() {
+    var hResults = {
+      warn: JR._lines.warn, tip: JR._lines.tip, info: JR._lines.info, statsHTML: JR.statsHTML
+    }, summary = "", prognosis = $("jr_results_prognosis");
+
+    if (prognosis) summary = prognosis.innerHTML + ", ";
+
+    summary += document.getElementsByTagName('*').length + ' elements';
+    summary = summary.replace("'", "\\'");
+    JR.SaveToJdrop("DOM Monster", hResults, JR.Version, summary);
+  };
+
+  JR.SaveToJdrop = function(appname, myDataObj, version, summary) {
+    // create object of parameters to pass to Jdrop
+    var params = { "appname": appname,
+      "title": document.title,
+      "version": version,
+      "summary": summary,
+      "json": JSON.stringify(myDataObj) };
+
+    // hidden iframe to use as target of form submit
+    var jdropif = document.createElement("iframe");
+    jdropif.style.display = "none";
+    jdropif.name = "jdropiframe";
+    jdropif.id = "jdropiframe";
+    document.body.appendChild(jdropif);
+
+    // form for posting data
+    var jdropform = document.createElement("form");
+    jdropform.method = "post";
+    jdropform.action = "http://jdrop.org/save";
+    jdropform.target = "jdropiframe";
+    jdropform.style.display = "hidden";
+
+    // add each param to the form as an input field
+    for (var key in params) {
+      var pInput = document.createElement("input");
+      pInput.setAttribute("name", key);
+      pInput.setAttribute("value", params[key]);
+      jdropform.appendChild(pInput);
+    }
+
+    // submit the form and cleanup
+    document.body.appendChild(jdropform);
+    jdropif.onload = function() { document.body.removeChild(jdropform); document.body.removeChild(jdropif); };
+    jdropif.onerror = function() { document.body.removeChild(jdropform); document.body.removeChild(jdropif); };
+    jdropform.submit();
+  };
+
+  JR.JdropCallback = function(jsonobj) {
+    if (!document.getElementById("jr_results_prognosis_container")) {
+      setTimeout(function() { JR.JdropCallback(jsonobj); }, 500);
+      return;
+    }
+    JR._lines.warn = jsonobj['warn'];
+    JR._lines.tip = jsonobj['tip'];
+    JR._lines.info = jsonobj['info'];
+    JR.statsHTML = jsonobj['statsHTML'];
+    JR.flush();
+  };
+
+  window.__DOMMonsterJdropCallBack = JR.JdropCallback;
 
   JR.close = function(){
     var results = $('jr_results_tips');
@@ -660,7 +723,7 @@
     if(JR._console)
       JR.info('Check the JavaScript console of your browser for detailed information on some of the tips.');
     try {
-      JR.performanceTips();
+      if("undefined" === typeof(JDROPVIEW)) JR.performanceTips();
     } catch(e) {
       error = e;
     }
@@ -696,8 +759,13 @@
           '<div style="'+JR.reset+'cursor:pointer;float:right;padding:5px 10px 3px 10px;height:15px;background:#b42328;-webkit-border-radius:5px;color:#fff;text-shadow:0px 1px 3px rgba(0,0,0,0.5)" onclick="location.href=\'http://mir.aculo.us/dom-monster/\'">'+
             'dom monster <span style="'+JR.reset+'font-size:10px">v'+JR.Version+'</span>'+
           '</div>'+
-          '<div style="'+JR.reset+'color:#888;float:right;padding:7px 10px 0px 10px;font-size:10px;text-decoration:underline;cursor:pointer" onclick="var r=document.getElementById(\'jr_results_tips\');r.parentNode.removeChild(r);">'+
+          '<div style="'+JR.reset+'float:right;padding:7px 10px 0px 10px;">'+
+          '<span style="'+JR.reset+'color:#888;font-size:10px;text-decoration:underline;cursor:pointer" onclick="document.getElementById(\'jr_results_tips\').saveResults()">'+
+            'save to Jdrop'+
+          '</span>'+
+          '<span style="'+JR.reset+'padding-left:10px;color:#888;font-size:10px;text-decoration:underline;cursor:pointer" onclick="var r=document.getElementById(\'jr_results_tips\');r.parentNode.removeChild(r);">'+
             'close'+
+          '</span>'+
           '</div>'+
         '</div>'+
         '<div style="'+JR.reset+'float:left;width:220px;padding:4px;margin-top:2px" id="jr_stats">'+
@@ -707,6 +775,8 @@
     setTimeout(function(){
       $('jr_results_tips').style.cssText += ';-webkit-transform:translateY(0px)';
     }, 10);
+
+    $('jr_results_tips').saveResults = JR.saveResults;
   },10);
  })();
 
@@ -1009,3 +1079,12 @@
          return '(?)';
      }
  };
+
+ /*
+     http://www.JSON.org/json2.js
+     2010-11-17
+     Public Domain.
+     NO WARRANTY EXPRESSED OR IMPLIED. USE AT YOUR OWN RISK.
+     See http://www.JSON.org/js.html
+ */
+ if(!this.JSON){this.JSON={}}(function(){function f(n){return n<10?"0"+n:n}if(typeof Date.prototype.toJSON!=="function"){Date.prototype.toJSON=function(key){return isFinite(this.valueOf())?this.getUTCFullYear()+"-"+f(this.getUTCMonth()+1)+"-"+f(this.getUTCDate())+"T"+f(this.getUTCHours())+":"+f(this.getUTCMinutes())+":"+f(this.getUTCSeconds())+"Z":null};String.prototype.toJSON=Number.prototype.toJSON=Boolean.prototype.toJSON=function(key){return this.valueOf()}}var cx=/[\u0000\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g,escapable=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g,gap,indent,meta={"\b":"\\b","\t":"\\t","\n":"\\n","\f":"\\f","\r":"\\r",'"':'\\"',"\\":"\\\\"},rep;function quote(string){escapable.lastIndex=0;return escapable.test(string)?'"'+string.replace(escapable,function(a){var c=meta[a];return typeof c==="string"?c:"\\u"+("0000"+a.charCodeAt(0).toString(16)).slice(-4)})+'"':'"'+string+'"'}function str(key,holder){var i,k,v,length,mind=gap,partial,value=holder[key];if(value&&typeof value==="object"&&typeof value.toJSON==="function"){value=value.toJSON(key)}if(typeof rep==="function"){value=rep.call(holder,key,value)}switch(typeof value){case"string":return quote(value);case"number":return isFinite(value)?String(value):"null";case"boolean":case"null":return String(value);case"object":if(!value){return"null"}gap+=indent;partial=[];if(Object.prototype.toString.apply(value)==="[object Array]"){length=value.length;for(i=0;i<length;i+=1){partial[i]=str(i,value)||"null"}v=partial.length===0?"[]":gap?"[\n"+gap+partial.join(",\n"+gap)+"\n"+mind+"]":"["+partial.join(",")+"]";gap=mind;return v}if(rep&&typeof rep==="object"){length=rep.length;for(i=0;i<length;i+=1){k=rep[i];if(typeof k==="string"){v=str(k,value);if(v){partial.push(quote(k)+(gap?": ":":")+v)}}}}else{for(k in value){if(Object.hasOwnProperty.call(value,k)){v=str(k,value);if(v){partial.push(quote(k)+(gap?": ":":")+v)}}}}v=partial.length===0?"{}":gap?"{\n"+gap+partial.join(",\n"+gap)+"\n"+mind+"}":"{"+partial.join(",")+"}";gap=mind;return v}}if(typeof JSON.stringify!=="function"){JSON.stringify=function(value,replacer,space){var i;gap="";indent="";if(typeof space==="number"){for(i=0;i<space;i+=1){indent+=" "}}else{if(typeof space==="string"){indent=space}}rep=replacer;if(replacer&&typeof replacer!=="function"&&(typeof replacer!=="object"||typeof replacer.length!=="number")){throw new Error("JSON.stringify")}return str("",{"":value})}}if(typeof JSON.parse!=="function"){JSON.parse=function(text,reviver){var j;function walk(holder,key){var k,v,value=holder[key];if(value&&typeof value==="object"){for(k in value){if(Object.hasOwnProperty.call(value,k)){v=walk(value,k);if(v!==undefined){value[k]=v}else{delete value[k]}}}}return reviver.call(holder,key,value)}text=String(text);cx.lastIndex=0;if(cx.test(text)){text=text.replace(cx,function(a){return"\\u"+("0000"+a.charCodeAt(0).toString(16)).slice(-4)})}if(/^[\],:{}\s]*$/.test(text.replace(/\\(?:["\\\/bfnrt]|u[0-9a-fA-F]{4})/g,"@").replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g,"]").replace(/(?:^|:|,)(?:\s*\[)+/g,""))){j=eval("("+text+")");return typeof reviver==="function"?walk({"":j},""):j}throw new SyntaxError("JSON.parse")}}}());
