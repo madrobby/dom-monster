@@ -102,7 +102,7 @@
     JR._lines['info'].push(
       '<div style="'+JR.reset+';font-family:monospace;border:1px solid #888;padding:5px">'+formatted+'</div>'
     );
-  }
+  };
 
   JR.time = function(scope){
     JR.time.scope = JR.time.scope || {};
@@ -176,7 +176,7 @@
           r = false;
         }
       return r;
-    }
+    };
 
     if(headcount>0 && JR.noLoaders())
       JR.tip('<span style="cursor:help" title="'+sources.join('\n')+'">Found '+headcount+' &lt;script&gt; tags in HEAD.</span>','For better perceived loading performance move script tags to end of document; or use a non-blocking JS loader library.');
@@ -233,7 +233,7 @@
       JR.tip("You are using the Typekit webfont service.", tiptext);
 
     function isFontService(href){
-      return /(webtype|fontdeck|fontslive|fonts|fonts\.googleapis|kernest|typotheque)\.com/.test(href)
+      return /(webtype|fontdeck|fontslive|fonts|fonts\.googleapis|kernest|typotheque)\.com/.test(href);
     }
     var styles = document.styleSheets, i = styles.length;
     if(i==0) return;
@@ -380,7 +380,7 @@
     }
     if (style == 'opacity') return value ? parseFloat(value) : 1.0;
     return value == 'auto' ? null : value;
-  },
+  };
 
   JR.opacityTips = function(){
     var nodes = $tagname('*'), op = [], i = nodes.length;
@@ -492,7 +492,7 @@
     }
     findWhitespaceTextnodes(document);
 
-    var contentPercent = textnodeLength/document.body.innerHTML.length*100
+    var contentPercent = textnodeLength/document.body.innerHTML.length*100;
 
     JR.stats(nodecount, 'nodes', level(nodecount,1500,3000));
     JR.stats(textnodes, 'text nodes', level(textnodes,750,1500));
@@ -515,7 +515,7 @@
     if(comments)
       JR.tip('There are '+comments+' HTML comments.','Removing the comments can help improve the loading and DOM API performance of the page.');
     if(emptyAttr)
-      JR.warn('There are '+emptyAttr+' HTML elements with empty source attributes.', 'Removing these nodes or updating the attributes will prevent double-loading of the page in some browsers. See this article for more information: '+dmlink('Empty image src can destroy your site','http://www.nczonline.net/blog/2009/11/30/empty-image-src-can-destroy-your-site/'))
+      JR.warn('There are '+emptyAttr+' HTML elements with empty source attributes.', 'Removing these nodes or updating the attributes will prevent double-loading of the page in some browsers. See this article for more information: '+dmlink('Empty image src can destroy your site','http://www.nczonline.net/blog/2009/11/30/empty-image-src-can-destroy-your-site/'));
     if(js&&js_byte)
       JR.tip('There are '+js_byte+' bytes of inline JavaScript code in '+js+' HTML nodes.', 'Removing the inline JavaScript, or updating the attributes will improve the loading speed of the page.');
   };
@@ -526,7 +526,7 @@
     JR.statsHTML +=
       '<div style="'+JR.reset+'margin:0;margin-left:5px;padding:0;margin-bottom:4px;height:auto"><div style="'+JR.reset+';float:left;width:13px;height:13px;margin-right:2px;background:#'+color[type||'low']+'"> </div>'+
       '<strong>'+value+'</strong> '+stat+
-      '</div>'
+      '</div>';
   };
 
   JR.globals = function(){
@@ -549,7 +549,7 @@
       return false;
     }
 
-    var global = (function(){ return this })(), properties = {}, prop, found = [], clean, iframe = document.createElement('iframe');
+    var global = (function(){ return this; })(), properties = {}, prop, found = [], clean, iframe = document.createElement('iframe');
     iframe.style.display = 'none';
     iframe.src = 'about:blank';
     document.body.appendChild(iframe);
@@ -587,7 +587,7 @@
     function parentNodes(node){
       var counter = 0;
       if(node.parentNode)
-        while(node = node.parentNode){ counter++ };
+        while(node = node.parentNode){ counter++; };
       return counter;
     }
     var nodes = $tagname('*'), nodeStats = [], i = nodes.length, average = 0, very = false;
