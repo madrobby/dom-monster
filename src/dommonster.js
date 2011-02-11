@@ -10,7 +10,7 @@
  */
 
 (function(){
-  var JR = { Version: '1.2.7' };
+  var JR = { Version: '1.2.8' };
 
   function $(id){ return document.getElementById(id); }
 
