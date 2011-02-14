@@ -183,11 +183,12 @@
   };
 
   JR.versionCompare = function(userVersion, edgeVersion) {
-
+    if(userVersion === undefined) return true;
+    
     userVersion = userVersion.split('.');
 
-    var major = ~~userVersion[0] >= edgeVersion[0], 
-        minor = userVersion[1] ? (~~userVersion[1] >= edgeVersion[1]) : true, 
+    var major = ~~userVersion[0] >= edgeVersion[0],
+        minor = userVersion[1] ? (~~userVersion[1] >= edgeVersion[1]) : true,
         build = userVersion[2] ? (~~userVersion[2] >= edgeVersion[2]) : true;
 
     if(!major || major && !minor || major && minor && !build) {
@@ -207,15 +208,13 @@
     if('Scriptaculous' in window && Scriptaculous.Version < '1.9.0')
       JR.tip("You are using script.aculo.us v"+Scriptaculous.Version+".","There's a newer version available, which potentially includes performance updates.");
 
-
     // Version number on http://jquery.com/
     if(typeof jQuery == 'function'){
-
       if(JR.versionCompare(jQuery.prototype.jquery, [1, 5, 0])) {
         JR.tip("You are using the jQuery JavaScript framework v"+jQuery.prototype.jquery+".","There's a newer version available, which potentially includes performance updates.");
       }
       // Version number on http://jqueryui.com/home
-      if(JR.versionCompare(jQuery.ui && jQuery.ui.version, [1, 8, 9])) {
+      if(jQuery.ui && JR.versionCompare(jQuery.ui.version, [1, 8, 9])) {
         JR.tip("You are using the jQuery UI JavaScript framework v"+jQuery.ui.version+".","There's a newer version available, which potentially includes performance updates.");
       }
     }
@@ -229,11 +228,11 @@
       JR.tip("You are using the Yahoo! User Interface Library 2 v"+YAHOO.env.getVersion('yahoo').version+".","There's a newer version available, which potentially includes performance updates.");
 
     // Version number on http://developer.yahoo.com/yui/3/
-    if('YUI' in window && typeof YUI == 'function' && JR.versionCompare(YUI().version, [3, 3, 0])
+    if('YUI' in window && typeof YUI == 'function' && JR.versionCompare(YUI().version, [3, 3, 0]))
       JR.tip("You are using the Yahoo! User Interface Library 3 v"+YUI().version+".","There's a newer version available, which potentially includes performance updates.");
 
     // Version number on http://mootools.net/download
-    if(typeof MooTools == 'object' && (!MooTools.version || JR.versionCompare(MooTools.version, [1, 3]))
+    if(typeof MooTools == 'object' && (!MooTools.version || JR.versionCompare(MooTools.version, [1, 3])))
       JR.tip("You are using the MooTools JavaScript tools v"+MooTools.version+".","There's a newer version available, which potentially includes performance updates.");
 
     // Version number Extjs on http://www.sencha.com/products/js/download.php
