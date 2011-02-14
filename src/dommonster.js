@@ -200,11 +200,11 @@
 
   JR.frameworkTips = function(){
     // Version number on http://prototypejs.org/download
-    if('Prototype' in window && Prototype.Version < '1.7')
+    if('Prototype' in window && JR.versionCompare(Prototype.Version, [1, 7]))
       JR.tip("You are using the Prototype JavaScript framework v"+Prototype.Version+".","There's a newer version available, which potentially includes performance updates.");
 
     // Version number on http://script.aculo.us/downloads
-    if('Scriptaculous' in window && Scriptaculous.Version < '1.9.0')
+    if('Scriptaculous' in window && JR.versionCompare(Scriptaculous.Version, [1, 9, 0]))
       JR.tip("You are using script.aculo.us v"+Scriptaculous.Version+".","There's a newer version available, which potentially includes performance updates.");
 
 
