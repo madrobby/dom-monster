@@ -184,7 +184,7 @@
 
   JR.versionCompare = function(userVersion, edgeVersion) {
     if(userVersion === undefined) return true;
-    
+
     userVersion = userVersion.split('.');
 
     var major = ~~userVersion[0] >= edgeVersion[0],
