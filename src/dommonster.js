@@ -245,6 +245,23 @@
       JR.tip('<span style="cursor:help" title="'+sources.join('\n')+'">Found '+headcount+' &lt;script&gt; tags in HEAD.</span>','For better perceived loading performance move script tags to end of document; or use a non-blocking JS loader library.');
   };
 
+  JR.versionCompare = function(userVersion, edgeVersion) {
+    if(userVersion === undefined) return true;
+
+    userVersion = userVersion.split('.');
+
+    var major = ~~userVersion[0] >= edgeVersion[0],
+        minor = userVersion[1] ? (~~userVersion[1] >= edgeVersion[1]) : true,
+        build = userVersion[2] ? (~~userVersion[2] >= edgeVersion[2]) : true;
+
+    if(!major || major && !minor || major && minor && !build) {
+      return false;
+    }
+
+    return true;
+
+  };
+
   JR.frameworkTips = function(){
     // Version number on http://prototypejs.org/download
     if('Prototype' in window && Prototype.Version < '1.7')
@@ -255,37 +272,38 @@
       JR.tip("You are using script.aculo.us v"+Scriptaculous.Version+".","There's a newer version available, which potentially includes performance updates.");
 
     // Version number on http://jquery.com/
-    if(typeof jQuery == 'function' ){
-      if(jQuery.prototype.jquery < '1.5.0')
+    if(typeof jQuery == 'function'){
+      if(JR.versionCompare(jQuery.prototype.jquery, [1, 5, 0])) {
         JR.tip("You are using the jQuery JavaScript framework v"+jQuery.prototype.jquery+".","There's a newer version available, which potentially includes performance updates.");
-
+      }
       // Version number on http://jqueryui.com/home
-      if(jQuery.ui && jQuery.ui.version < '1.8.9')
+      if(jQuery.ui && JR.versionCompare(jQuery.ui.version, [1, 8, 9])) {
         JR.tip("You are using the jQuery UI JavaScript framework v"+jQuery.ui.version+".","There's a newer version available, which potentially includes performance updates.");
+      }
     }
 
     // Version number on http://download.dojotoolkit.org/
-    if(typeof dojo == 'object' && dojo.version.toString() < '1.5.0' && !(dojo.version.toString().match(/dev/)))
+    if(typeof dojo == 'object' && JR.versionCompare(dojo.version.toString(), [1, 5, 0]) && !(dojo.version.toString().match(/dev/)))
       JR.tip("You are using the dojo JavaScript toolkit v"+dojo.version.toString()+".","There's a newer version available, which potentially includes performance updates.");
 
     // Version number on http://developer.yahoo.com/yui/
-    if(typeof YAHOO == 'object' && typeof YAHOO.evn == 'object' && YAHOO.env.getVersion('yahoo').version < '2.8.2')
+    if(typeof YAHOO == 'object' && typeof YAHOO.evn == 'object' && JR.versionCompare(YAHOO.env.getVersion('yahoo').version, [2, 8, 2]))
       JR.tip("You are using the Yahoo! User Interface Library 2 v"+YAHOO.env.getVersion('yahoo').version+".","There's a newer version available, which potentially includes performance updates.");
 
     // Version number on http://developer.yahoo.com/yui/3/
-    if('YUI' in window && typeof YUI == 'function' && YUI().version < '3.3.0')
+    if('YUI' in window && typeof YUI == 'function' && JR.versionCompare(YUI().version, [3, 3, 0]))
       JR.tip("You are using the Yahoo! User Interface Library 3 v"+YUI().version+".","There's a newer version available, which potentially includes performance updates.");
 
     // Version number on http://mootools.net/download
-    if(typeof MooTools == 'object' && (!MooTools.version || MooTools.version < '1.3'))
+    if(typeof MooTools == 'object' && (!MooTools.version || JR.versionCompare(MooTools.version, [1, 3])))
       JR.tip("You are using the MooTools JavaScript tools v"+MooTools.version+".","There's a newer version available, which potentially includes performance updates.");
 
     // Version number Extjs on http://www.sencha.com/products/js/download.php
-    if(typeof Ext === 'object' && Ext.version < '3.3.1')
+    if(typeof Ext === 'object' && JR.versionCompare(Ext.version, [3, 3, 1]))
       JR.tip("You are using the Ext JS v"+Ext.version+".","There's a newer version available, which potentially includes performance updates.");
 
     // Version number on http://rightjs.org/
-    if('RightJS' in window && RightJS.version < '2.2.1')
+    if('RightJS' in window && JR.versionCompare(RightJS.version, [2, 2, 1]))
       JR.tip("You are using the RightJS JavaScript framework v"+RightJS.version+".","There's a newer version available, which potentially includes performance updates.");
   };
 
