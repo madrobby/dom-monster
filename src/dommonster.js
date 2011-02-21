@@ -651,11 +651,11 @@
       return value<mid?'high':value<high?'mid':'low';
     }
     var o = JR.statsObject;
+    JR.stats(o['elements'], 'elements', level(o['elements'],750,1500));
     JR.stats(o['nodecount'], 'nodes', level(o['nodecount'],1500,3000));
     JR.stats(o['textnodes'], 'text nodes', level(o['textnodes'],750,1500));
     JR.stats((o['textnodessize']/1024).toFixed(1)+'k', 'text node size', level(o['textnodessize'],80000,500000));
     JR.stats(o['contentpercent']+'%', 'content percentage', revlevel(o['contentpercent'], 25, 50));
-    JR.stats(o['elements'], 'elements', level(o['elements'],750,1500));
     JR.stats(o['average'], 'average nesting depth', level(o['average'],8,15));
     JR.stats((o['domsize']/1024).toFixed(1)+'k', 'serialized DOM size', level(o['domsize'],100*1024,250*1024));
     JR.stats(o['bodycount']+'s', 'serialization time', level(o['bodycount'],0.05,0.1));
