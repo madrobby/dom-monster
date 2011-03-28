@@ -273,7 +273,7 @@
 
     // Version number on http://jquery.com/
     if(typeof jQuery == 'function'){
-      if(JR.versionCompare(jQuery.prototype.jquery, [1, 5, 0])) {
+      if(JR.versionCompare(jQuery.prototype.jquery, [1, 5, 1])) {
         JR.tip("You are using the jQuery JavaScript framework v"+jQuery.prototype.jquery+".","There's a newer version available, which potentially includes performance updates.");
       }
       // Version number on http://jqueryui.com/home
