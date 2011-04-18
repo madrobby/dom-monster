@@ -21,7 +21,7 @@
       if (index < 0) {
         index += length;
       }
-      
+
 	  for (; index < length; ++index) {
         if (this[index] === object) {
           return index;
@@ -31,13 +31,13 @@
       return -1;
     };
   }
- 
+
   function $(id){ return document.getElementById(id); }
 
   function $tagname(tagname) {
     var nodes = document.getElementsByTagName(tagname),
       retValue = [];
-    
+
 	for (var i = nodes.length - 1; i >= 0; i = i - 1) {
       retValue[i] = nodes[i];
     }
@@ -588,7 +588,7 @@
       }
     }
     function findWhitespaceTextnodes(element){
-      // Safety check		
+      // Safety check
       if(element.childNodes && element.childNodes.length>0)
         for(var i=0;i<element.childNodes.length;i++)
           findWhitespaceTextnodes(element.childNodes[i]);
@@ -693,7 +693,7 @@
   };
 
   JR.performanceTips = function(){
-    JR.cssTips();
+    var domsize = document.body.innerHTML.length;
 
     function level(value,mid,high){
       return value<mid?'low':value<high?'mid':'high';
@@ -713,7 +713,7 @@
       }
     }
     average = average/nodes.length;
-    var domsize = document.body.innerHTML.length;
+
     JR.stats(nodes.length, 'elements', level(nodes.length,750,1500));
 
     JR.nodesTips();
@@ -740,6 +740,7 @@
     if(very)
       JR.warn('Nesting depth is very high.','Some of the nodes are nested more than 15 levels deep (these are marked with a dashed red border).');
 
+    JR.cssTips();
     JR.doctypeTips();
     JR.frameworkTips();
     JR.webfontTips();
