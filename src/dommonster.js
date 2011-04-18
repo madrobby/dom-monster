@@ -10,7 +10,7 @@
  */
 
 (function(){
-  var JR = { Version: '1.3.0' };
+  var JR = { Version: '1.3.1' };
 
   // IE does not seem to properly define the indexOf for arrays.
   if ("undefined" === typeof(Array.prototype.indexOf)) {
