@@ -21,7 +21,7 @@
       if (index < 0) {
         index += length;
       }
-      
+
 	  for (; index < length; ++index) {
         if (this[index] === object) {
           return index;
@@ -31,13 +31,13 @@
       return -1;
     };
   }
- 
+
   function $(id){ return document.getElementById(id); }
 
   function $tagname(tagname) {
     var nodes = document.getElementsByTagName(tagname),
       retValue = [];
-    
+
 	for (var i = nodes.length - 1; i >= 0; i = i - 1) {
       retValue[i] = nodes[i];
     }
@@ -588,7 +588,7 @@
       }
     }
     function findWhitespaceTextnodes(element){
-      // Safety check		
+      // Safety check
       if(element.childNodes && element.childNodes.length>0)
         for(var i=0;i<element.childNodes.length;i++)
           findWhitespaceTextnodes(element.childNodes[i]);
