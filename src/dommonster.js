@@ -693,7 +693,7 @@
   };
 
   JR.performanceTips = function(){
-    JR.cssTips();
+    var domsize = document.body.innerHTML.length;
 
     function level(value,mid,high){
       return value<mid?'low':value<high?'mid':'high';
@@ -713,7 +713,7 @@
       }
     }
     average = average/nodes.length;
-    var domsize = document.body.innerHTML.length;
+
     JR.stats(nodes.length, 'elements', level(nodes.length,750,1500));
 
     JR.nodesTips();
@@ -740,6 +740,7 @@
     if(very)
       JR.warn('Nesting depth is very high.','Some of the nodes are nested more than 15 levels deep (these are marked with a dashed red border).');
 
+    JR.cssTips();
     JR.doctypeTips();
     JR.frameworkTips();
     JR.webfontTips();
