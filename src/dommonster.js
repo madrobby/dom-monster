@@ -305,11 +305,11 @@
 
     // Version number on http://jquery.com/
     if(typeof jQuery == 'function'){
-      if(JR.versionCompare(jQuery.prototype.jquery, [1, 5, 0])) {
+      if(JR.versionCompare(jQuery.prototype.jquery, [1, 5, 2])) {
         JR.tip("You are using the jQuery JavaScript framework v"+jQuery.prototype.jquery+".","There's a newer version available, which potentially includes performance updates.");
       }
       // Version number on http://jqueryui.com/home
-      if(jQuery.ui && JR.versionCompare(jQuery.ui.version, [1, 8, 9])) {
+      if(jQuery.ui && JR.versionCompare(jQuery.ui.version, [1, 8, 11])) {
         JR.tip("You are using the jQuery UI JavaScript framework v"+jQuery.ui.version+".","There's a newer version available, which potentially includes performance updates.");
       }
     }
@@ -335,7 +335,7 @@
       JR.tip("You are using the Ext JS v"+Ext.version+".","There's a newer version available, which potentially includes performance updates.");
 
     // Version number on http://rightjs.org/
-    if('RightJS' in window && JR.versionCompare(RightJS.version, [2, 2, 1]))
+    if('RightJS' in window && JR.versionCompare(RightJS.version, [2, 2, 3]))
       JR.tip("You are using the RightJS JavaScript framework v"+RightJS.version+".","There's a newer version available, which potentially includes performance updates.");
   };
 
