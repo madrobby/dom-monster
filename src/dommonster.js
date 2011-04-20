@@ -10,12 +10,44 @@
  */
 
 (function(){
-  var JR = { Version: '1.3.0' };
+  var JR = { Version: '1.3.1' };
+
+  // IE does not seem to properly define the indexOf for arrays.
+  if ("undefined" === typeof(Array.prototype.indexOf)) {
+    Array.prototype.indexOf = function (object, index) {
+      var length = this.length;
+
+	  index = index || 0;
+      if (index < 0) {
+        index += length;
+      }
+
+	  for (; index < length; ++index) {
+        if (this[index] === object) {
+          return index;
+        }
+      }
+
+      return -1;
+    };
+  }
 
   function $(id){ return document.getElementById(id); }
 
-  function $tagname(tagname){
-    return [].slice.call(document.getElementsByTagName(tagname));
+  function $tagname(tagname) {
+    var nodes = document.getElementsByTagName(tagname),
+      retValue = [];
+
+	for (var i = nodes.length - 1; i >= 0; i = i - 1) {
+      retValue[i] = nodes[i];
+    }
+
+    return retValue;
+
+    // This is yields undefined behavior according to the ECMA spec
+	// since this is returns a NodeList which is a host object.
+	// This causes a break in IE.
+    //return [].slice.call(document.getElementsByTagName(tagname));
   }
 
   JR._lines = { info:[], tip:[], warn:[] };
@@ -310,20 +342,20 @@
 
   JR.frameworkTips = function(){
     // Version number on http://prototypejs.org/download
-    if('Prototype' in window && Prototype.Version < '1.7')
+    if('Prototype' in window && JR.versionCompare(Prototype.Version, [1, 7]))
       JR.tip("You are using the Prototype JavaScript framework v"+Prototype.Version+".","There's a newer version available, which potentially includes performance updates.");
 
     // Version number on http://script.aculo.us/downloads
-    if('Scriptaculous' in window && Scriptaculous.Version < '1.9.0')
+    if('Scriptaculous' in window && JR.versionCompare(Scriptaculous.Version, [1, 9, 0]))
       JR.tip("You are using script.aculo.us v"+Scriptaculous.Version+".","There's a newer version available, which potentially includes performance updates.");
 
     // Version number on http://jquery.com/
     if(typeof jQuery == 'function'){
-      if(JR.versionCompare(jQuery.prototype.jquery, [1, 5, 0])) {
+      if(JR.versionCompare(jQuery.prototype.jquery, [1, 5, 2])) {
         JR.tip("You are using the jQuery JavaScript framework v"+jQuery.prototype.jquery+".","There's a newer version available, which potentially includes performance updates.");
       }
       // Version number on http://jqueryui.com/home
-      if(jQuery.ui && JR.versionCompare(jQuery.ui.version, [1, 8, 9])) {
+      if(jQuery.ui && JR.versionCompare(jQuery.ui.version, [1, 8, 11])) {
         JR.tip("You are using the jQuery UI JavaScript framework v"+jQuery.ui.version+".","There's a newer version available, which potentially includes performance updates.");
       }
     }
@@ -349,7 +381,7 @@
       JR.tip("You are using the Ext JS v"+Ext.version+".","There's a newer version available, which potentially includes performance updates.");
 
     // Version number on http://rightjs.org/
-    if('RightJS' in window && JR.versionCompare(RightJS.version, [2, 2, 1]))
+    if('RightJS' in window && JR.versionCompare(RightJS.version, [2, 2, 3]))
       JR.tip("You are using the RightJS JavaScript framework v"+RightJS.version+".","There's a newer version available, which potentially includes performance updates.");
   };
 
@@ -598,7 +630,8 @@
       }
     }
     function findWhitespaceTextnodes(element){
-      if(element.childNodes.length>0)
+      // Safety check
+      if(element.childNodes && element.childNodes.length>0)
         for(var i=0;i<element.childNodes.length;i++)
           findWhitespaceTextnodes(element.childNodes[i]);
       nodecount++;
@@ -720,7 +753,7 @@
   };
 
   JR.performanceTips = function(){
-    JR.cssTips();
+    var domsize = document.body.innerHTML.length;
 
     function parentNodes(node){
       var counter = 0;
@@ -737,7 +770,7 @@
       }
     }
     average = average/nodes.length;
-    var domsize = document.body.innerHTML.length;
+
     JR.statsObject['elements'] = nodes.length;
 
     JR.nodesTips();
@@ -764,6 +797,7 @@
     if(very)
       JR.warn('Nesting depth is very high.','Some of the nodes are nested more than 15 levels deep (these are marked with a dashed red border).');
 
+    JR.cssTips();
     JR.doctypeTips();
     JR.frameworkTips();
     JR.webfontTips();
