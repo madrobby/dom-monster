@@ -277,21 +277,20 @@
       JR.tip('<span style="cursor:help" title="'+sources.join('\n')+'">Found '+headcount+' &lt;script&gt; tags in HEAD.</span>','For better perceived loading performance move script tags to end of document; or use a non-blocking JS loader library.');
   };
 
+  function digitCompare(user, edge) {
+    return (~~user || 0) >= (edge || 0);
+  }
+
   JR.versionCompare = function(userVersion, edgeVersion) {
     if(userVersion === undefined) return true;
 
     userVersion = userVersion.split('.');
 
-    var major = ~~userVersion[0] >= edgeVersion[0],
-        minor = userVersion[1] ? (~~userVersion[1] >= edgeVersion[1]) : true,
-        build = userVersion[2] ? (~~userVersion[2] >= edgeVersion[2]) : true;
+    var major = digitCompare(userVersion[0], edgeVersion[0]),
+        minor = digitCompare(userVersion[1], edgeVersion[1]),
+        build = digitCompare(userVersion[2], edgeVersion[2]);
 
-    if(!major || major && !minor || major && minor && !build) {
-      return false;
-    }
-
-    return true;
-
+    return (!major || major && !minor || major && minor && !build);
   };
 
   JR.frameworkTips = function(){
