@@ -294,48 +294,49 @@
   };
 
   JR.frameworkTips = function(){
+    var hint = "There's a newer version available, which potentially includes performance updates.";
     // Version number on http://prototypejs.org/download
     if('Prototype' in window && JR.versionCompare(Prototype.Version, [1, 7]))
-      JR.tip("You are using the Prototype JavaScript framework v"+Prototype.Version+".","There's a newer version available, which potentially includes performance updates.");
+      JR.tip("You are using the Prototype JavaScript framework v"+Prototype.Version+".", hint);
 
     // Version number on http://script.aculo.us/downloads
     if('Scriptaculous' in window && JR.versionCompare(Scriptaculous.Version, [1, 9, 0]))
-      JR.tip("You are using script.aculo.us v"+Scriptaculous.Version+".","There's a newer version available, which potentially includes performance updates.");
+      JR.tip("You are using script.aculo.us v"+Scriptaculous.Version+".", hint);
 
     // Version number on http://jquery.com/
     if(typeof jQuery == 'function'){
-      if(JR.versionCompare(jQuery.prototype.jquery, [1, 5, 2])) {
-        JR.tip("You are using the jQuery JavaScript framework v"+jQuery.prototype.jquery+".","There's a newer version available, which potentially includes performance updates.");
+      if(JR.versionCompare(jQuery.prototype.jquery, [1, 7, 1])) {
+        JR.tip("You are using the jQuery JavaScript framework v"+jQuery.prototype.jquery+".", hint);
       }
       // Version number on http://jqueryui.com/home
-      if(jQuery.ui && JR.versionCompare(jQuery.ui.version, [1, 8, 11])) {
-        JR.tip("You are using the jQuery UI JavaScript framework v"+jQuery.ui.version+".","There's a newer version available, which potentially includes performance updates.");
+      if(jQuery.ui && JR.versionCompare(jQuery.ui.version, [1, 8, 17])) {
+        JR.tip("You are using the jQuery UI JavaScript framework v"+jQuery.ui.version+".", hint);
       }
     }
 
     // Version number on http://download.dojotoolkit.org/
-    if(typeof dojo == 'object' && JR.versionCompare(dojo.version.toString(), [1, 5, 0]) && !(dojo.version.toString().match(/dev/)))
-      JR.tip("You are using the dojo JavaScript toolkit v"+dojo.version.toString()+".","There's a newer version available, which potentially includes performance updates.");
+    if(typeof dojo == 'object' && JR.versionCompare(dojo.version.toString(), [1, 7, 1]) && !(dojo.version.toString().match(/dev/)))
+      JR.tip("You are using the dojo JavaScript toolkit v"+dojo.version.toString()+".", hint);
 
     // Version number on http://developer.yahoo.com/yui/
-    if(typeof YAHOO == 'object' && typeof YAHOO.evn == 'object' && JR.versionCompare(YAHOO.env.getVersion('yahoo').version, [2, 8, 2]))
-      JR.tip("You are using the Yahoo! User Interface Library 2 v"+YAHOO.env.getVersion('yahoo').version+".","There's a newer version available, which potentially includes performance updates.");
+    if(typeof YAHOO == 'object' && typeof YAHOO.evn == 'object' && JR.versionCompare(YAHOO.env.getVersion('yahoo').version, [2, 9, 0]))
+      JR.tip("You are using the Yahoo! User Interface Library 2 v"+YAHOO.env.getVersion('yahoo').version+".", hint);
 
     // Version number on http://developer.yahoo.com/yui/3/
-    if('YUI' in window && typeof YUI == 'function' && JR.versionCompare(YUI().version, [3, 3, 0]))
-      JR.tip("You are using the Yahoo! User Interface Library 3 v"+YUI().version+".","There's a newer version available, which potentially includes performance updates.");
+    if('YUI' in window && typeof YUI == 'function' && JR.versionCompare(YUI().version, [3, 4, 1]))
+      JR.tip("You are using the Yahoo! User Interface Library 3 v"+YUI().version+".", hint);
 
     // Version number on http://mootools.net/download
-    if(typeof MooTools == 'object' && (!MooTools.version || JR.versionCompare(MooTools.version, [1, 3])))
-      JR.tip("You are using the MooTools JavaScript tools v"+MooTools.version+".","There's a newer version available, which potentially includes performance updates.");
+    if(typeof MooTools == 'object' && (!MooTools.version || JR.versionCompare(MooTools.version, [1, 4, 4])))
+      JR.tip("You are using the MooTools JavaScript tools v"+MooTools.version+".", hint);
 
     // Version number Extjs on http://www.sencha.com/products/js/download.php
-    if(typeof Ext === 'object' && JR.versionCompare(Ext.version, [3, 3, 1]))
-      JR.tip("You are using the Ext JS v"+Ext.version+".","There's a newer version available, which potentially includes performance updates.");
+    if(typeof Ext === 'object' && JR.versionCompare(Ext.version, [3, 4, 0]))
+      JR.tip("You are using the Ext JS v"+Ext.version+".", hint);
 
     // Version number on http://rightjs.org/
-    if('RightJS' in window && JR.versionCompare(RightJS.version, [2, 2, 3]))
-      JR.tip("You are using the RightJS JavaScript framework v"+RightJS.version+".","There's a newer version available, which potentially includes performance updates.");
+    if('RightJS' in window && JR.versionCompare(RightJS.version, [2, 3, 0]))
+      JR.tip("You are using the RightJS JavaScript framework v"+RightJS.version+".", hint);
   };
 
   JR.webfontTips = function(){
