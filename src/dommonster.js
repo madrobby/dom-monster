@@ -17,12 +17,12 @@
     Array.prototype.indexOf = function (object, index) {
       var length = this.length;
 
-	  index = index || 0;
+	    index = index || 0;
       if (index < 0) {
         index += length;
       }
 
-	  for (; index < length; ++index) {
+	    for (; index < length; ++index) {
         if (this[index] === object) {
           return index;
         }
@@ -32,13 +32,15 @@
     };
   }
 
-  function $(id){ return document.getElementById(id); }
+  function $(id) {
+    return document.getElementById(id);
+  }
 
   function $tagname(tagname) {
     var nodes = document.getElementsByTagName(tagname),
       retValue = [];
 
-	for (var i = nodes.length - 1; i >= 0; i = i - 1) {
+	  for (var i = nodes.length - 1; i >= 0; i = i - 1) {
       retValue[i] = nodes[i];
     }
 
@@ -65,11 +67,12 @@
 
   function unique(arr){
     var hash={}, result=[];
-    for (var i=0, l=arr.length; i<l; ++i)
+    for (var i=0, l=arr.length; i<l; ++i) {
       if(!hash.hasOwnProperty(arr[i])){
         hash[arr[i]]=true;
         result.push(arr[i]);
       }
+    }
     return result;
   }
 
@@ -78,7 +81,9 @@
       warn: JR._lines.warn, tip: JR._lines.tip, info: JR._lines.info, statsHTML: JR.statsHTML
     }, summary = "", prognosis = $("jr_results_prognosis");
 
-    if (prognosis) summary = prognosis.innerHTML + ", ";
+    if (prognosis) {
+      summary = prognosis.innerHTML + ", ";
+    }
 
     summary += document.getElementsByTagName('*').length + ' elements';
     summary = summary.replace("'", "\\'");
@@ -191,22 +196,27 @@
 
   JR.trace = function(msgs){
     var formatted = "";
-    for(var i=0;i<msgs.length;i++)
+    for(var i=0;i<msgs.length;i++) {
       formatted += html(msgs[i]) + '<br>';
+    }
 
     JR._lines['info'].push(
       '<div style="'+JR.reset+';font-family:monospace;border:1px solid #888;padding:5px">'+formatted+'</div>'
     );
   }
 
+  JR.now = Date.now || function() {
+    return +new Date;
+  };
+
   JR.time = function(scope){
     JR.time.scope = JR.time.scope || {};
     if(JR.time.scope[scope]) {
-      var duration = (new Date()).getTime()-JR.time.scope[scope];
+      var duration = JR.now() - JR.time.scope[scope];
       JR.time.scope[scope] = null;
       return duration/1000;
     } else {
-      JR.time.scope[scope] = (new Date()).getTime();
+      JR.time.scope[scope] = JR.now();
       return null;
     }
   };
@@ -214,7 +224,9 @@
   JR.benchmark = function(method, times, scope){
     var i = times || 1000;
     JR.time(scope||'benchmark');
-    while(i--) method();
+    while(i--) {
+      method();
+    }
     return JR.time(scope||'benchmark')/times;
   };
 
@@ -232,8 +244,9 @@
              headcount = headcount + 1;
              sources.push(nodes[i].src);
           }
-      if(nodes[i].innerHTML.length >= (1024*2))
+          if( nodes[i].innerHTML.length >= (1024*2) ) {
             longInlines.push(nodes[i]);
+          }
 
           count = count + 1;
         }
@@ -242,23 +255,24 @@
           headcount = headcount + 1;
         }
 
-    if(nodes[i].innerHTML.length >= (1024*2))
-            longInlines.push(nodes[i]);
+        if( nodes[i].innerHTML.length >= (1024*2) ) {
+          longInlines.push(nodes[i]);
+        }
 
         count = count + 1;
       }
     }
 
-    if(count>2 && count<6)
-      JR.tip('Found '+count+' &lt;script&gt; tags on page.','Try to reduce the number of script tags.');
-    if(count.length>=6)
-      JR.warn('Found '+count+' &lt;script&gt; tags on page.','Try to reduce the number of script tags.');
+    if ( count > 2 ) {
+      JR[count < 6 ? 'tip': 'warn']('Found '+count+' &lt;script&gt; tags on page.','Try to reduce the number of script tags.')
+    }
 
 
-  // inline scripts block rendering
+    // inline scripts block rendering
     // http://www.stevesouders.com/blog/2009/05/06/positioning-inline-scripts/
-    if(longInlines.length>0)
+    if(longInlines.length>0) {
       JR.tip('Found ' + longInlines.length + ' big (>=2kB) inline script'+((longInlines.length>1)?'s':'')+'.', 'Try to avoid big inline scripts, they block rendering and won\'t get cached.');
+    }
 
     JR.noLoaders = function() {
       var loaders = ['head', 'yepnope', '$LAB', 'jsl', 'JSLoader'], r = true;
@@ -370,53 +384,69 @@
   };
 
   JR.iFrameTips = function(){
-    var nodes = $tagname('iframe');
-    if(nodes.length>0 && nodes.length<4)
-      JR.tip('Reduce the number of &lt;iframe&gt; tags.','There are '+nodes.length+' iframe elements on the page.');
-    if(nodes.length>=4)
-      JR.warn('Reduce the number of &lt;iframe&gt; tags','There are '+nodes.length+' iframe elements on the page.');
+    var nodes = $tagname('iframe'), len = nodes.length;
+    
+    if ( len ) {
+      JR[len < 4 ? 'tip' : 'warn']('Reduce the number of &lt;iframe&gt; tags.','There are ' + len + ' iframe elements on the page.');
+    }
   };
 
   JR.cssTips = function(){
     function linkTagTips(){
-    var nodes = [], links = $tagname('link'), i = links.length;
-    if(i==0) return;
-    while(i--) if((links[i].rel||'').toLowerCase()=='stylesheet') nodes.push(links[i]);
-    if(nodes.length>1 && nodes.length<8)
-      JR.tip('Reduce the number of &lt;link rel="stylesheet"&gt; tags.','There are '+nodes.length+' external stylesheets loaded on the page.');
-    if(nodes.length>=8)
-      JR.warn('Reduce the number of &lt;link rel="stylesheet"&gt; tags','There are '+nodes.length+' external stylesheets loaded on the page.');
+      var nodes = [], links = $tagname('link'), i = links.length;
+      if(i==0) return;
+      while(i--) {
+        if((links[i].rel||'').toLowerCase()=='stylesheet') nodes.push(links[i]);
+      }
+    
+      i = nodes.length;
+      if ( i ) {
+        JR[i < 8 ? 'tip': 'warn']('Reduce the number of &lt;link rel="stylesheet"&gt; tags.','There are ' + i +' external stylesheets loaded on the page.'
+      }
     }
     function styleAttributeTips(){
       var nodes = $tagname('*'), i = nodes.length, styleNodes = 0, styleBytes = 0;
-      while(i--)
+      while(i--) {
         if(nodes[i].style.cssText.length > 0){
           if(JR._console) console.warn('Inline style', nodes[i]);
           styleNodes++;
           styleBytes += nodes[i].style.cssText.length + 8;
         }
-      if(styleNodes>0)
+      }
+      if(styleNodes>0) {
         JR.tip('Reduce the number of tags that use the style attribute, replacing it with external CSS definitions.', styleNodes+' nodes use the style attribute, for a total of '+styleBytes+' bytes.');
+      }
     }
     function dontAtImport() {
       var styles = $tagname('style'),
         i = styles.length,
         present = false;
       if (i == 0) return;
-      while (i--) if (styles[i].innerHTML.indexOf('@import') != '-1') present = true;
-      if (present)
+      while (i--) {
+        if (styles[i].innerHTML.indexOf('@import') != '-1') {
+          present = true;
+        }
+      }
+      if (present) {
         JR.tip('Using @import in a style element will impact rendering performance.', 'Use the &lt;link&gt; tag instead. See '+dmlink('this article', 'http://www.stevesouders.com/blog/2009/04/09/dont-use-import/')+' for details.');
+      }
     }
     function checkForShadows() {
       var stylesheets = [].slice(document.styleSheets), shadowCount = 0;
 
-      for (var i = 0; i < stylesheets.length; i++)
-        if (stylesheets[i].cssRules)
-          for (var x = 0; x < stylesheets[i].cssRules.length; x++)
-            if (stylesheets[i].cssRules[x].cssText.indexOf('box-shadow') != '-1') shadowCount++;
+      for (var i = 0; i < stylesheets.length; i++) {
+        if (stylesheets[i].cssRules) {
+          for (var x = 0; x < stylesheets[i].cssRules.length; x++) {
+            if (stylesheets[i].cssRules[x].cssText.indexOf('box-shadow') != '-1') {
+              shadowCount++;
+            }
+          }
+        }
+      }
 
-      if (shadowCount > 0)
+      if (shadowCount > 0) {
         JR.tip('Using the box-shadow property can introduce serious scroll & resize lag in the browser.', 'Consider replacing with border-image or reducing the number of elements with shadows (currently: ' + shadowCount + ')');
+      }
     }
     linkTagTips();
     styleAttributeTips();
@@ -464,7 +494,9 @@
 
      if (i) {
        while (i--) {
-         if ((obj[i].type || '').toLowerCase() == 'application/x-shockwave-flash') nodes.push(obj[i]);
+         if ((obj[i].type || '').toLowerCase() == 'application/x-shockwave-flash') {
+           nodes.push(obj[i]);
+         }
        }
      }
 
@@ -472,7 +504,9 @@
      i = obj.length;
      if (i) {
        while (i--) {
-         if ((obj[i].classid || '').toLowerCase() == 'clsid:D27CDB6E-AE6D-11cf-96B8-444553540000' || (obj[i].type || '').toLowerCase() == 'application/x-shockwave-flash') nodes.push(obj[i]);
+         if ((obj[i].classid || '').toLowerCase() == 'clsid:D27CDB6E-AE6D-11cf-96B8-444553540000' || (obj[i].type || '').toLowerCase() == 'application/x-shockwave-flash') {
+           nodes.push(obj[i]);
+         }
        }
      }
 
@@ -501,7 +535,9 @@
       if(opacity<1) {
         nodes[i].style.cssText += ';border:1px dashed #00f';
         op.push(nodes[i]);
-        if(JR._console) console.info('Transparent node', nodes[i]);
+        if( JR._console ) {
+          console.info('Transparent node', nodes[i]);
+        }
       }
     }
     if(op.length>0 && op.length < 10)
@@ -623,14 +659,18 @@
       if(JR._console) console.warn('Duplicate element ids found', unique(multiIds));
       if(JR._console) console.warn('Nodes affected by duplicate ids', multiIdsElements);
     }
-    if(whitespace)
+    if(whitespace) {
       JR.tip(((whitespace/nodecount)*100).toFixed(1)+'% of nodes are whitespace-only text nodes.','Reducing the amount of whitespace, like line breaks and tab stops, can help improve the loading and DOM API performance of the page.');
-    if(comments)
+    }
+    if(comments) {
       JR.tip('There are '+comments+' HTML comments.','Removing the comments can help improve the loading and DOM API performance of the page.');
-    if(emptyAttr)
+    }
+    if(emptyAttr) {
       JR.warn('There are '+emptyAttr+' HTML elements with empty source attributes.', 'Removing these nodes or updating the attributes will prevent double-loading of the page in some browsers. See this article for more information: '+dmlink('Empty image src can destroy your site','http://www.nczonline.net/blog/2009/11/30/empty-image-src-can-destroy-your-site/'))
-    if(js&&js_byte)
+    }
+    if(js&&js_byte) {
       JR.tip('There are '+js_byte+' bytes of inline JavaScript code in '+js+' HTML nodes.', 'Removing the inline JavaScript, or updating the attributes will improve the loading speed of the page.');
+    }
   };
 
   JR.statsHTML = '';
@@ -647,8 +687,9 @@
       var allowed = ['Components','XPCNativeWrapper','XPCSafeJSObjectWrapper','getInterface','netscape','GetWeakReference'],
       i = allowed.length;
       while(i--){
-        if(allowed[i] === name)
+        if(allowed[i] === name) {
           return true;
+        }
       }
       return false;
     }
@@ -656,8 +697,9 @@
     function nametag(attr){
       var ele = nametag.cache = nametag.cache || $tagname('*'), i = ele.length;
       while(i--){
-        if(ele[i].name && ele[i].name == attr)
+        if(ele[i].name && ele[i].name == attr) {
           return true;
+        }
       }
       return false;
     }
@@ -749,22 +791,27 @@
     JR.flashTips();
     JR.globals();
 
-    if(JR._lines.tip.length == 0 && JR._lines.warn.length == 0)
+    if(JR._lines.tip.length == 0 && JR._lines.warn.length == 0) {
       JR.tip('No tips! Congratulations! It seems your site is up to speed!');
+    }
   };
 
   var IE = !!(window.attachEvent && navigator.userAgent.indexOf('Opera') === -1);
-  if(IE) JR.getStyle = function(element, style) {
-    style = (style == 'float' || style == 'cssFloat') ? 'styleFloat' : style;
-    var value = element.style[style];
-    if (!value && element.currentStyle) value = element.currentStyle[style];
-    if (style == 'opacity') {
-      if (value = (element.style.filter || '').match(/alpha\(opacity=(.*)\)/))
-        if (value[1]) return parseFloat(value[1]) / 100;
-      return 1.0;
-    }
-    return value;
-  };
+  if(IE) {
+    JR.getStyle = function(element, style) {
+      style = (style == 'float' || style == 'cssFloat') ? 'styleFloat' : style;
+      var value = element.style[style];
+      if (!value && element.currentStyle) {
+        value = element.currentStyle[style];
+      }
+      if (style == 'opacity') {
+        if (value = (element.style.filter || '').match(/alpha\(opacity=(.*)\)/))
+          if (value[1]) return parseFloat(value[1]) / 100;
+        return 1.0;
+      }
+      return value;
+    };
+  }
 
   var old = $('jr_results_tips');
   if(old) old.parentNode.removeChild(old);
