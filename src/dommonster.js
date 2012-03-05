@@ -809,9 +809,9 @@
     }
     function parentNodes(node){
       var counter = 0;
-      if(node.parentNode) {
-        node = node.parentNode;
+      if( node.parentNode ) {
         while( node ){
+          node = node.parentNode;
           counter++;
         }
       }
