@@ -17,12 +17,12 @@
     Array.prototype.indexOf = function (object, index) {
       var length = this.length;
 
-	    index = index || 0;
+      index = index || 0;
       if (index < 0) {
         index += length;
       }
 
-	    for (; index < length; ++index) {
+      for (; index < length; ++index) {
         if (this[index] === object) {
           return index;
         }
@@ -40,7 +40,7 @@
     var nodes = document.getElementsByTagName(tagname),
       retValue = [];
 
-	  for (var i = nodes.length - 1; i >= 0; i = i - 1) {
+    for (var i = nodes.length - 1; i >= 0; i = i - 1) {
       retValue[i] = nodes[i];
     }
 
@@ -132,10 +132,10 @@
       setTimeout(function() { JR.JdropCallback(jsonobj); }, 500);
       return;
     }
-    JR._lines.warn = jsonobj['warn'];
-    JR._lines.tip = jsonobj['tip'];
-    JR._lines.info = jsonobj['info'];
-    JR.statsHTML = jsonobj['statsHTML'];
+    JR._lines.warn = jsonobj.warn;
+    JR._lines.tip = jsonobj.tip;
+    JR._lines.info = jsonobj.info;
+    JR.statsHTML = jsonobj.statsHTML;
     JR.flush();
   };
 
@@ -150,8 +150,9 @@
     var results = $('jr_results_tips'),
       html = '<div style="'+JR.reset+';margin-left:230px;padding-top:4px">';
     function flushArray(array){
-      for(var i=0;i<array.length;i++)
+      for(var i=0;i<array.length;i++) {
         html += '<div style="'+JR.reset+'margin:0 0 4px 0;padding:4px 0px 0px 0px;font-size:11px">' + array[i] + '</div>';
+      }
     }
     var prognosis = $("jr_results_prognosis"),
       container = $("jr_results_prognosis_container"),
@@ -200,10 +201,10 @@
       formatted += html(msgs[i]) + '<br>';
     }
 
-    JR._lines['info'].push(
+    JR._lines.info.push(
       '<div style="'+JR.reset+';font-family:monospace;border:1px solid #888;padding:5px">'+formatted+'</div>'
     );
-  }
+  };
 
   JR.now = Date.now || function() {
     return +new Date;
@@ -264,7 +265,7 @@
     }
 
     if ( count > 2 ) {
-      JR[count < 6 ? 'tip': 'warn']('Found '+count+' &lt;script&gt; tags on page.','Try to reduce the number of script tags.')
+      JR[count < 6 ? 'tip': 'warn']('Found '+count+' &lt;script&gt; tags on page.','Try to reduce the number of script tags.');
     }
 
 
@@ -276,7 +277,7 @@
 
     JR.noLoaders = function() {
       var loaders = ['head', 'yepnope', '$LAB', 'jsl', 'JSLoader'], r = true;
-      for (var i=0;i<loaders.length;i++)
+      for (var i=0;i<loaders.length;i++) {
         if (loaders[i] in window) {
           JR.tip("You're using "+loaders[i]+", a JavaScript loader library.",
             "Often you can achieve the best performance and compression by serving a single "+
@@ -284,11 +285,13 @@
             "a loader library.");
           r = false;
         }
+      }
       return r;
-    }
+    };
 
-    if(headcount>0 && JR.noLoaders())
+    if(headcount>0 && JR.noLoaders()) {
       JR.tip('<span style="cursor:help" title="'+sources.join('\n')+'">Found '+headcount+' &lt;script&gt; tags in HEAD.</span>','For better perceived loading performance move script tags to end of document; or use a non-blocking JS loader library.');
+    }
   };
 
   function digitCompare(user, edge) {
@@ -296,7 +299,9 @@
   }
 
   JR.versionCompare = function(userVersion, edgeVersion) {
-    if(userVersion === undefined) return true;
+    if(userVersion === undefined) {
+      return true;
+    }
 
     userVersion = userVersion.split('.');
 
@@ -309,12 +314,14 @@
 
   JR.frameworkTips = function(){
     // Version number on http://prototypejs.org/download
-    if('Prototype' in window && JR.versionCompare(Prototype.Version, [1, 7]))
+    if('Prototype' in window && JR.versionCompare(Prototype.Version, [1, 7])) {
       JR.tip("You are using the Prototype JavaScript framework v"+Prototype.Version+".","There's a newer version available, which potentially includes performance updates.");
+    }
 
     // Version number on http://script.aculo.us/downloads
-    if('Scriptaculous' in window && JR.versionCompare(Scriptaculous.Version, [1, 9, 0]))
+    if('Scriptaculous' in window && JR.versionCompare(Scriptaculous.Version, [1, 9, 0])) {
       JR.tip("You are using script.aculo.us v"+Scriptaculous.Version+".","There's a newer version available, which potentially includes performance updates.");
+    }
 
     // Version number on http://jquery.com/
     if(typeof jQuery == 'function'){
@@ -328,54 +335,72 @@
     }
 
     // Version number on http://download.dojotoolkit.org/
-    if(typeof dojo == 'object' && JR.versionCompare(dojo.version.toString(), [1, 5, 0]) && !(dojo.version.toString().match(/dev/)))
+    if(typeof dojo == 'object' && JR.versionCompare(dojo.version.toString(), [1, 5, 0]) && !(dojo.version.toString().match(/dev/))) {
       JR.tip("You are using the dojo JavaScript toolkit v"+dojo.version.toString()+".","There's a newer version available, which potentially includes performance updates.");
+    }
 
     // Version number on http://developer.yahoo.com/yui/
-    if(typeof YAHOO == 'object' && typeof YAHOO.evn == 'object' && JR.versionCompare(YAHOO.env.getVersion('yahoo').version, [2, 8, 2]))
+    if(typeof YAHOO == 'object' && typeof YAHOO.evn == 'object' && JR.versionCompare(YAHOO.env.getVersion('yahoo').version, [2, 8, 2])) {
       JR.tip("You are using the Yahoo! User Interface Library 2 v"+YAHOO.env.getVersion('yahoo').version+".","There's a newer version available, which potentially includes performance updates.");
+    }
 
     // Version number on http://developer.yahoo.com/yui/3/
-    if('YUI' in window && typeof YUI == 'function' && JR.versionCompare(YUI().version, [3, 3, 0]))
+    if('YUI' in window && typeof YUI == 'function' && JR.versionCompare(YUI().version, [3, 3, 0])) {
       JR.tip("You are using the Yahoo! User Interface Library 3 v"+YUI().version+".","There's a newer version available, which potentially includes performance updates.");
+    }
 
     // Version number on http://mootools.net/download
-    if(typeof MooTools == 'object' && (!MooTools.version || JR.versionCompare(MooTools.version, [1, 3])))
+    if(typeof MooTools == 'object' && (!MooTools.version || JR.versionCompare(MooTools.version, [1, 3]))) {
       JR.tip("You are using the MooTools JavaScript tools v"+MooTools.version+".","There's a newer version available, which potentially includes performance updates.");
+    }
 
     // Version number Extjs on http://www.sencha.com/products/js/download.php
-    if(typeof Ext === 'object' && JR.versionCompare(Ext.version, [3, 3, 1]))
+    if(typeof Ext === 'object' && JR.versionCompare(Ext.version, [3, 3, 1])) {
       JR.tip("You are using the Ext JS v"+Ext.version+".","There's a newer version available, which potentially includes performance updates.");
+    }
 
     // Version number on http://rightjs.org/
-    if('RightJS' in window && JR.versionCompare(RightJS.version, [2, 2, 3]))
+    if('RightJS' in window && JR.versionCompare(RightJS.version, [2, 2, 3])) {
       JR.tip("You are using the RightJS JavaScript framework v"+RightJS.version+".","There's a newer version available, which potentially includes performance updates.");
+    }
   };
 
   JR.webfontTips = function(){
     var tiptext = "Using external webfont services can increase your page load times, as well as possible downtime if the service goes down.";
 
-    if(typeof Typekit == 'object')
+    if(typeof Typekit == 'object') {
       JR.tip("You are using the Typekit webfont service.", tiptext);
+    }
 
     function isFontService(href){
-      return /(webtype|fontdeck|fontslive|fonts|fonts\.googleapis|kernest|typotheque)\.com/.test(href)
+      return (/(webtype|fontdeck|fontslive|fonts|fonts\.googleapis|kernest|typotheque)\.com/).test(href);
     }
-    var styles = document.styleSheets, i = styles.length;
-    if(i==0) return;
+    var styles = document.styleSheets, i = styles.length, href, j;
+    if( !i ) {
+      return;
+    }
     while(i--) {
-      var href = styles[i].href||'', j = 0;
-      if(styles[i].rules) j = styles[i].rules.length;
+      href = styles[i].href||'';
+      j = 0;
+      if(styles[i].rules) {
+        j = styles[i].rules.length;
+      }
       if(isFontService(href)){
-        if(JR._console) console.log(href);
+        if(JR._console) {
+          console.log(href);
+        }
         JR.tip("You are using an external webfont service.", tiptext);
         return "";
       }
-      if(j==0) continue;
+      if( !j ) {
+        continue;
+      }
       while(j--){
-        var href = styles[i].rules[j].href||'';
+        href = styles[i].rules[j].href||'';
         if(isFontService(href)){
-          if(JR._console) console.log(href);
+          if(JR._console) {
+            console.log(href);
+          }
           JR.tip("You are using an external webfont service.", tiptext);
           return "";
         }
@@ -394,21 +419,27 @@
   JR.cssTips = function(){
     function linkTagTips(){
       var nodes = [], links = $tagname('link'), i = links.length;
-      if(i==0) return;
+      if( !i ) {
+        return;
+      }
       while(i--) {
-        if((links[i].rel||'').toLowerCase()=='stylesheet') nodes.push(links[i]);
+        if((links[i].rel||'').toLowerCase()=='stylesheet') {
+          nodes.push(links[i]);
+        }
       }
     
       i = nodes.length;
       if ( i ) {
-        JR[i < 8 ? 'tip': 'warn']('Reduce the number of &lt;link rel="stylesheet"&gt; tags.','There are ' + i +' external stylesheets loaded on the page.'
+        JR[i < 8 ? 'tip': 'warn']('Reduce the number of &lt;link rel="stylesheet"&gt; tags.','There are ' + i +' external stylesheets loaded on the page.');
       }
     }
     function styleAttributeTips(){
       var nodes = $tagname('*'), i = nodes.length, styleNodes = 0, styleBytes = 0;
       while(i--) {
         if(nodes[i].style.cssText.length > 0){
-          if(JR._console) console.warn('Inline style', nodes[i]);
+          if(JR._console) {
+            console.warn('Inline style', nodes[i]);
+          }
           styleNodes++;
           styleBytes += nodes[i].style.cssText.length + 8;
         }
@@ -421,7 +452,9 @@
       var styles = $tagname('style'),
         i = styles.length,
         present = false;
-      if (i == 0) return;
+      if ( !i ) {
+        return;
+      }
       while (i--) {
         if (styles[i].innerHTML.indexOf('@import') != '-1') {
           present = true;
@@ -481,10 +514,11 @@
 
   JR.doctypeTips = function(){
     var dt = getDocType();
-    if(dt !== "" && getDocType().toLowerCase() !== '<!doctype html>')
+    if(dt !== "" && getDocType().toLowerCase() !== '<!doctype html>') {
       JR.tip('Switch to HTML5 and use a short doctype declaration.',
         html('Using (<!DOCTYPE html>) saves some bytes and increases parsing speed '+
           '(your current declaration is ' + dt + ').'));
+    }
   };
 
    JR.flashTips = function() {
@@ -524,9 +558,11 @@
       var css = document.defaultView.getComputedStyle(element, null);
       value = css ? css[style] : null;
     }
-    if (style == 'opacity') return value ? parseFloat(value) : 1.0;
+    if (style == 'opacity') {
+      return value ? parseFloat(value) : 1.0;
+    }
     return value == 'auto' ? null : value;
-  },
+  };
 
   JR.opacityTips = function(){
     var nodes = $tagname('*'), op = [], i = nodes.length;
@@ -540,10 +576,12 @@
         }
       }
     }
-    if(op.length>0 && op.length < 10)
+    if(op.length>0 && op.length < 10) {
       JR.tip('Some nodes use transparency.','To improve rendering performance, try not to use the CSS opacity property (found '+op.length+' nodes, marked with a dashed blue border).');
-    if(op.length >= 10)
+    }
+    if(op.length >= 10) {
       JR.warn('Lots of nodes use transparency.','To improve rendering performance, try not to use the CSS opacity property (found '+op.length+' nodes, marked with a dashed blue border).');
+    }
   };
 
   JR.nodesTips = function(){
@@ -565,35 +603,48 @@
 
     while(i--) {
       var tag = nodes[i].tagName.toLowerCase(), attribute, j = inlinejs.length;
-      if (nodes[i].childNodes.length==0 && !(tag=='link' || tag=='br' || tag=='script' || tag=='meta' || tag=='img' ||
+      if ( !nodes[i].childNodes.length && !(tag=='link' || tag=='br' || tag=='script' || tag=='meta' || tag=='img' ||
             tag=='a' || tag=='input' || tag=='hr' || tag=='param' || tag=='iframe' ||
-            tag=='area' || tag=='base') && !((nodes[i].id||'') == '_firebugConsole')) {
-        if(JR._console) console.warn('Empty node', nodes[i]);
+            tag=='area' || tag=='base') && ((nodes[i].id||'') !== '_firebugConsole')) {
+        if(JR._console) {
+          console.warn('Empty node', nodes[i]);
+        }
         empty++;
       }
 
       if(DEPRECATED.indexOf(tag)>-1) {
-        if(JR._console) console.warn('Deprecated node', nodes[i]);
-        if(!deprecatedTags[tag]) deprecatedTags[tag] = true;
+        if( JR._console) {
+          console.warn('Deprecated node', nodes[i]);
+        }
+        if( !deprecatedTags[tag] ) {
+          deprecatedTags[tag] = true;
+        }
         deprecated++;
       }
 
-      if(nodes[i].id)
+      if(nodes[i].id) {
         if(ids[nodes[i].id]){
           multiIds.push(nodes[i].id);
           multiIdsElements.push(nodes[i]);
         }
-        else ids[nodes[i].id] = true;
+        else {
+          ids[nodes[i].id] = true;
+        }
+      }
 
       if(tag=='link' && /stylesheet|icon|shortcut|prefetch/.test(nodes[i].rel) && nodes[i].getAttribute('href') === ''){
-        if(JR._console) console.warn('Empty href attribute', nodes[i]);
+        if(JR._console) {
+          console.warn('Empty href attribute', nodes[i]);
+        }
         emptyAttr++;
       }
 
       if(tag=='html'){
         attribute = nodes[i].attributes.getNamedItem('manifest');
         if(attribute && attribute.value === ''){
-          if(JR._console) console.warn('Empty manifest attribute', nodes[i]);
+          if(JR._console) {
+            console.warn('Empty manifest attribute', nodes[i]);
+          }
           emptyAttr++;
         }
       }
@@ -601,7 +652,9 @@
       if(tag=='video' || tag=='audio' || tag=='iframe' || tag=='input' || tag=='embed' || tag == 'img'){
         attribute = nodes[i].attributes.getNamedItem('src');
         if(attribute && attribute.value === '' ){
-          if(JR._console) console.warn('Empty src attribute', nodes[i]);
+          if(JR._console) {
+            console.warn('Empty src attribute', nodes[i]);
+          }
           emptyAttr++;
         }
       }
@@ -609,7 +662,9 @@
       while( j-- ){
         attribute = nodes[i].getAttribute('on'+inlinejs[j]);
         if(attribute){
-            if(JR._console) console.warn('Inline JavaScript', nodes[i]);
+            if(JR._console) {
+              console.warn('Inline JavaScript', nodes[i]);
+            }
             js_byte += 5 + attribute.length + inlinejs[j].length;
             js++;
         }
@@ -617,19 +672,24 @@
 
       // additional toLowerCase check prevents SVG problem, #29
       if(nodes[i].href && nodes[i].href.toLowerCase && nodes[i].href.toLowerCase().indexOf( "javascript:" ) == 0 ){
-        if(JR._console) console.warn('Inline JavaScript', nodes[i]);
+        if(JR._console) {
+          console.warn('Inline JavaScript', nodes[i]);
+        }
         js++;
         js_byte += nodes[i].href.length;
       }
     }
     function findWhitespaceTextnodes(element){
       // Safety check
-      if(element.childNodes && element.childNodes.length>0)
-        for(var i=0;i<element.childNodes.length;i++)
+      if(element.childNodes && element.childNodes.length>0) {
+        for(var i=0;i<element.childNodes.length;i++) {
           findWhitespaceTextnodes(element.childNodes[i]);
+        }
+      }
       nodecount++;
-      if(element.nodeType==8)
+      if(element.nodeType==8) {
         comments++;
+      }
       if(element.nodeType==3 && /^\s+$/.test(element.nodeValue)){
         // if(JR._console) console.warn('Whitespace-only text node', element);
         whitespace++;
@@ -641,23 +701,29 @@
     }
     findWhitespaceTextnodes(document);
 
-    var contentPercent = textnodeLength/document.body.innerHTML.length*100
+    var contentPercent = textnodeLength/document.body.innerHTML.length*100;
 
     JR.stats(nodecount, 'nodes', level(nodecount,1500,3000));
     JR.stats(textnodes, 'text nodes', level(textnodes,750,1500));
     JR.stats((textnodeLength/1024).toFixed(1)+'k', 'text node size', level(textnodeLength,80000,500000));
     JR.stats(contentPercent.toFixed(2)+'%', 'content percentage', revlevel(contentPercent, 25, 50));
 
-    if(empty) JR.tip('There are '+empty+' empty nodes.','Removing them might improve performance.');
+    if(empty) {
+      JR.tip('There are '+empty+' empty nodes.','Removing them might improve performance.');
+    }
     if(deprecated) {
       var tags = [];
-      for(tag in deprecatedTags) tags.push(tag.toUpperCase());
+      for(tag in deprecatedTags) {
+        tags.push(tag.toUpperCase());
+      }
       JR.tip('There are '+deprecated+' nodes which use a deprecated tag name ('+tags.join(', ')+').','Try updating this content to HTML5.');
     }
     if(multiIds.length > 0){
       JR.warn('There '+((multiIds.length==1)?'is ':'are ')+multiIds.length+' duplicate id'+((multiIds.length>1)?'s':'')+' for nodes in your document.', 'Node ids must be unique within the HTML document. See JavaScript console for details.');
-      if(JR._console) console.warn('Duplicate element ids found', unique(multiIds));
-      if(JR._console) console.warn('Nodes affected by duplicate ids', multiIdsElements);
+      if(JR._console) {
+        console.warn('Duplicate element ids found', unique(multiIds));
+        console.warn('Nodes affected by duplicate ids', multiIdsElements);
+      }
     }
     if(whitespace) {
       JR.tip(((whitespace/nodecount)*100).toFixed(1)+'% of nodes are whitespace-only text nodes.','Reducing the amount of whitespace, like line breaks and tab stops, can help improve the loading and DOM API performance of the page.');
@@ -666,7 +732,7 @@
       JR.tip('There are '+comments+' HTML comments.','Removing the comments can help improve the loading and DOM API performance of the page.');
     }
     if(emptyAttr) {
-      JR.warn('There are '+emptyAttr+' HTML elements with empty source attributes.', 'Removing these nodes or updating the attributes will prevent double-loading of the page in some browsers. See this article for more information: '+dmlink('Empty image src can destroy your site','http://www.nczonline.net/blog/2009/11/30/empty-image-src-can-destroy-your-site/'))
+      JR.warn('There are '+emptyAttr+' HTML elements with empty source attributes.', 'Removing these nodes or updating the attributes will prevent double-loading of the page in some browsers. See this article for more information: '+dmlink('Empty image src can destroy your site','http://www.nczonline.net/blog/2009/11/30/empty-image-src-can-destroy-your-site/'));
     }
     if(js&&js_byte) {
       JR.tip('There are '+js_byte+' bytes of inline JavaScript code in '+js+' HTML nodes.', 'Removing the inline JavaScript, or updating the attributes will improve the loading speed of the page.');
@@ -679,7 +745,7 @@
     JR.statsHTML +=
       '<div style="'+JR.reset+'margin:0;margin-left:5px;padding:0;margin-bottom:4px;height:auto"><div style="'+JR.reset+';float:left;width:13px;height:13px;margin-right:2px;background:#'+color[type||'low']+'"> </div>'+
       '<strong>'+value+'</strong> '+stat+
-      '</div>'
+      '</div>';
   };
 
   JR.globals = function(){
@@ -704,7 +770,7 @@
       return false;
     }
 
-    var global = (function(){ return this })(), properties = {}, prop, found = [], clean, iframe = document.createElement('iframe');
+    var global = (function(){ return this; })(), properties = {}, prop, found = [], clean, iframe = document.createElement('iframe');
     iframe.style.display = 'none';
     iframe.src = 'about:blank';
     document.body.appendChild(iframe);
@@ -729,7 +795,9 @@
 
     if(found.length > 5){
       JR.tip('Found '+found.length+' JavaScript globals.','Cutting back on globals can increase JavaScript performance.' + (JR._console ? ' See JavaScript console for details.' : ''));
-      if(JR._console) console.log('Found more than 5 globals on your page.', found);
+      if(JR._console) {
+        console.log('Found more than 5 globals on your page.', found);
+      }
     }
   };
 
@@ -741,8 +809,12 @@
     }
     function parentNodes(node){
       var counter = 0;
-      if(node.parentNode)
-        while(node = node.parentNode){ counter++ };
+      if(node.parentNode) {
+        node = node.parentNode;
+        while( node ){
+          counter++;
+        }
+      }
       return counter;
     }
     var nodes = $tagname('*'), nodeStats = [], i = nodes.length, average = 0, very = false;
@@ -761,25 +833,31 @@
     JR.stats(average.toFixed(1), 'average nesting depth', level(average,8,15));
     JR.stats((domsize/1024).toFixed(1)+'k', 'serialized DOM size', level(domsize,100*1024,250*1024));
 
-    if(domsize>(100*1024) && domsize<(250*1024))
+    if(domsize>(100*1024) && domsize<(250*1024)) {
       JR.tip('Your serialized DOM size is a little high.','Performance might improve if you reduce the amount of HTML.');
-    if(domsize>=(250*1024))
+    }
+    if(domsize>=(250*1024)) {
       JR.warn('DOM size is higher than 250k.','Performance might improve if you reduce the amount of HTML.');
+    }
 
     var bodycount = JR.benchmark(function(){
       document.body.appendChild(document.createTextNode(' '));
       var x = document.body.innerHTML;
     }, 10);
     JR.stats(bodycount.toFixed(3)+'s', 'serialization time', level(bodycount,0.05,0.1));
-    if(bodycount>0.1)
+    if(bodycount>0.1) {
       JR.warn('Average DOM serialization speed is '+bodycount.toFixed(3)+'s.','Try to reduce the complexity of the DOM structure.');
+    }
 
-    if(nodes.length>1500)
+    if(nodes.length>1500) {
       JR.warn('Element count seems excessively high.','Performance might improve if you reduce the number of nodes.');
-    if(average>8 && average<=15)
+    }
+    if(average>8 && average<=15) {
       JR.tip('Nesting depth is a little high.','Reducing it might increase performance.');
-    if(very)
+    }
+    if(very) {
       JR.warn('Nesting depth is very high.','Some of the nodes are nested more than 15 levels deep (these are marked with a dashed red border).');
+    }
 
     JR.cssTips();
     JR.doctypeTips();
@@ -805,8 +883,12 @@
         value = element.currentStyle[style];
       }
       if (style == 'opacity') {
-        if (value = (element.style.filter || '').match(/alpha\(opacity=(.*)\)/))
-          if (value[1]) return parseFloat(value[1]) / 100;
+        value = (element.style.filter || '').match(/alpha\(opacity=(.*)\)/);
+        if ( value ) {
+          if (value[1]) {
+            return parseFloat(value[1]) / 100;
+          }
+        }
         return 1.0;
       }
       return value;
@@ -814,14 +896,19 @@
   }
 
   var old = $('jr_results_tips');
-  if(old) old.parentNode.removeChild(old);
+  if(old) {
+    old.parentNode.removeChild(old);
+  }
   setTimeout(function(){
     var error;
 
-    if(JR._console)
+    if(JR._console) {
       JR.info('Check the JavaScript console of your browser for detailed information on some of the tips.');
+    }
     try {
-      if("undefined" === typeof(JDROPVIEW)) JR.performanceTips();
+      if("undefined" === typeof(JDROPVIEW)) {
+        JR.performanceTips();
+      }
     } catch(e) {
       error = e;
     }
