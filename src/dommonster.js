@@ -807,7 +807,7 @@
             '<span id="jr_results_prognosis" style="'+JR.reset+'"></span> '+
             '<span style="'+JR.reset+'font-size:12px;font-weight:normal" id="jr_results_warnings_container"><span id="jr_results_warnings" style="'+JR.reset+'"></span></span>'+
           '</div>'+
-          '<div style="'+JR.reset+'cursor:pointer;float:right;padding:5px 10px 3px 10px;height:15px;background:#b42328;-webkit-border-radius:5px;color:#fff;text-shadow:0px 1px 3px rgba(0,0,0,0.5)" onclick="location.href=\'http://mir.aculo.us/dom-monster/\'">'+
+          '<div style="'+JR.reset+'cursor:pointer;float:right;padding:5px 10px 3px 10px;height:15px;background:#b42328;-webkit-border-radius:5px;color:#fff;text-shadow:0px 1px 3px rgba(0,0,0,0.5)" onclick="location.href=\'//mir.aculo.us/dom-monster/\'">'+
             'dom monster <span style="'+JR.reset+'font-size:10px">v'+JR.Version+'</span>'+
           '</div>'+
           '<div style="'+JR.reset+'float:right;padding:7px 10px 0px 10px;">'+
