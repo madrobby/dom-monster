@@ -1,6 +1,6 @@
 /*
  * DOM MONSTER
- * Copyright (c) 2009-2011 Amy Hoy & Thomas Fuchs
+ * Copyright (c) 2009-2013 Amy Hoy & Thomas Fuchs
  * This code is licensed under the terms of the MIT LICENSE
  * http://mir.aculo.us/dom-monster
  *
@@ -10,7 +10,7 @@
  */
 
 (function(){
-  var JR = { Version: '1.3.1' };
+  var JR = { Version: '1.3.2' };
 
   // IE does not seem to properly define the indexOf for arrays.
   if ("undefined" === typeof(Array.prototype.indexOf)) {
@@ -295,7 +295,7 @@
 
   JR.frameworkTips = function(){
     // Version number on http://prototypejs.org/download
-    if('Prototype' in window && JR.versionCompare(Prototype.Version, [1, 7]))
+    if('Prototype' in window && JR.versionCompare(Prototype.Version, [1, 7, 1]))
       JR.tip("You are using the Prototype JavaScript framework v"+Prototype.Version+".","There's a newer version available, which potentially includes performance updates.");
 
     // Version number on http://script.aculo.us/downloads
@@ -304,17 +304,17 @@
 
     // Version number on http://jquery.com/
     if(typeof jQuery == 'function'){
-      if(JR.versionCompare(jQuery.prototype.jquery, [1, 5, 2])) {
+      if(JR.versionCompare(jQuery.prototype.jquery, [2, 0, 3])) {
         JR.tip("You are using the jQuery JavaScript framework v"+jQuery.prototype.jquery+".","There's a newer version available, which potentially includes performance updates.");
       }
       // Version number on http://jqueryui.com/home
-      if(jQuery.ui && JR.versionCompare(jQuery.ui.version, [1, 8, 11])) {
+      if(jQuery.ui && JR.versionCompare(jQuery.ui.version, [1, 10, 3])) {
         JR.tip("You are using the jQuery UI JavaScript framework v"+jQuery.ui.version+".","There's a newer version available, which potentially includes performance updates.");
       }
     }
 
     // Version number on http://download.dojotoolkit.org/
-    if(typeof dojo == 'object' && JR.versionCompare(dojo.version.toString(), [1, 5, 0]) && !(dojo.version.toString().match(/dev/)))
+    if(typeof dojo == 'object' && JR.versionCompare(dojo.version.toString(), [1, 9, 1]) && !(dojo.version.toString().match(/dev/)))
       JR.tip("You are using the dojo JavaScript toolkit v"+dojo.version.toString()+".","There's a newer version available, which potentially includes performance updates.");
 
     // Version number on http://developer.yahoo.com/yui/
@@ -322,19 +322,19 @@
       JR.tip("You are using the Yahoo! User Interface Library 2 v"+YAHOO.env.getVersion('yahoo').version+".","There's a newer version available, which potentially includes performance updates.");
 
     // Version number on http://developer.yahoo.com/yui/3/
-    if('YUI' in window && typeof YUI == 'function' && JR.versionCompare(YUI().version, [3, 3, 0]))
+    if('YUI' in window && typeof YUI == 'function' && JR.versionCompare(YUI().version, [3, 13, 0]))
       JR.tip("You are using the Yahoo! User Interface Library 3 v"+YUI().version+".","There's a newer version available, which potentially includes performance updates.");
 
     // Version number on http://mootools.net/download
-    if(typeof MooTools == 'object' && (!MooTools.version || JR.versionCompare(MooTools.version, [1, 3])))
+    if(typeof MooTools == 'object' && (!MooTools.version || JR.versionCompare(MooTools.version, [1, 4, 5])))
       JR.tip("You are using the MooTools JavaScript tools v"+MooTools.version+".","There's a newer version available, which potentially includes performance updates.");
 
     // Version number Extjs on http://www.sencha.com/products/js/download.php
-    if(typeof Ext === 'object' && JR.versionCompare(Ext.version, [3, 3, 1]))
+    if(typeof Ext === 'object' && JR.versionCompare(Ext.version, [4, 2, 1]))
       JR.tip("You are using the Ext JS v"+Ext.version+".","There's a newer version available, which potentially includes performance updates.");
 
     // Version number on http://rightjs.org/
-    if('RightJS' in window && JR.versionCompare(RightJS.version, [2, 2, 3]))
+    if('RightJS' in window && JR.versionCompare(RightJS.version, [2, 3, 1]))
       JR.tip("You are using the RightJS JavaScript framework v"+RightJS.version+".","There's a newer version available, which potentially includes performance updates.");
   };
 
