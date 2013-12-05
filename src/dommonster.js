@@ -456,8 +456,33 @@
         html('Using (<!DOCTYPE html>) saves some bytes and increases parsing speed '+
           '(your current declaration is ' + dt + ').'));
   };
+  
+  JR.formTips = function(){
+    var forms = $tagname('form'),
+        formElementNames = {},
+        duplicitNames = {},
+        actFormElement = '';
+    for(var i = 0; i < forms.length; i++){
+      for(var ii = 0; ii < forms[i].elements.length; ii++){
+        actFormElement = forms[i].elements[ii].name;
+        if(formElementNames[actFormElement]) {
+          formElementNames[actFormElement]++;
+          if(formElementNames[actFormElement] > 1) {
+            duplicitNames[actFormElement] = formElementNames[actFormElement];
+          }
+        }
+        else {
+          formElementNames[actFormElement] = 1;
+        }
+      }
+    }
+    if(Object.keys(duplicitNames).length > 0){
+      JR.warn('There are ' + Object.keys(duplicitNames).length + ' duplicate names for elements in your form.', html('See JavaScript console for details.'));
+      if(JR._console) console.warn('Duplicit element names in forms', duplicitNames);
+    }
+  };
 
-   JR.flashTips = function() {
+  JR.flashTips = function() {
      var nodes = [],
      obj = $tagname('embed'),
      i = obj.length;
@@ -745,6 +770,7 @@
     JR.webfontTips();
     JR.scriptTagsTips();
     JR.iFrameTips();
+    JR.formTips();
     JR.opacityTips();
     JR.flashTips();
     JR.globals();
