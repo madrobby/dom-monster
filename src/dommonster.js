@@ -799,7 +799,7 @@
     node.style.cssText =
       JR.reset+'text-align:left;z-index:1000000;letter-spacing:0;position:fixed;bottom:0;'+
       'color:#444;font:12px/13px \'Helvetica Neue\', Verdana, Arial, sans serif;'+
-      'width:80%;left:10%';
+      'width:80%;left:10%;direction:rtl;';
     node.innerHTML =
       '<div id="jr_results_tips" style="'+JR.reset+'max-height:400px;margin:10px;padding:5px;overflow:auto;background:#fff;border:2px solid #b42328;-moz-border-radius:9px;-webkit-border-radius:9px;-webkit-box-shadow: 0px 2px 40px rgba(0,0,0,0.5);-webkit-transition:-webkit-transform ease-out 0.3s;-webkit-transform:translateY(450px)">' +
         '<div style="'+JR.reset+'height:23px;font-size:16px;font-weight:normal;margin-top:0px;margin-bottom:5px;color:#444">'+
