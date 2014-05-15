@@ -85,6 +85,52 @@
     JR.SaveToJdrop("DOM Monster", hResults, JR.Version, summary);
   };
 
+  JR.showslowurl = "http://www.showslow.com/beacon/dommonster/";
+  if("undefined" !== typeof(SHOWSLOWINSTANCE)) {
+    JR.showslowurl = SHOWSLOWINSTANCE + "beacon/dommonster/";
+  };
+
+  JR.sendToShowSlow = function() {
+    var params = {
+      "version": JR.Version,
+      "url": document.location,
+      "stats": JSON.stringify(JR.statsObject) };
+
+    // hidden iframe to use as target of form submit
+    var showslowif = document.createElement("iframe");
+    showslowif.style.display = "none";
+    showslowif.name = "showslowiframe";
+    showslowif.id = "showslowiframe";
+    document.body.appendChild(showslowif);
+
+    // form for posting data
+    var showslowform = document.createElement("form");
+    showslowform.method = "post";
+    showslowform.action = JR.showslowurl;
+    showslowform.target = "showslowiframe";
+    showslowform.style.display = "hidden";
+
+    // add each param to the form as an input field
+    for (var key in params) {
+      var pInput = document.createElement("input");
+      pInput.setAttribute("name", key);
+      pInput.setAttribute("value", params[key]);
+      showslowform.appendChild(pInput);
+    }
+
+    // submit the form and cleanup
+    document.body.appendChild(showslowform);
+    showslowif.onload = function() {
+      document.body.removeChild(showslowform);
+      document.body.removeChild(showslowif);
+    };
+    showslowif.onerror = function() {
+      document.body.removeChild(showslowform);
+      document.body.removeChild(showslowif);
+    };
+    showslowform.submit();
+  }
+
   JR.SaveToJdrop = function(appname, myDataObj, version, summary) {
     // create object of parameters to pass to Jdrop
     var params = { "appname": appname,
@@ -510,13 +556,9 @@
       JR.warn('Lots of nodes use transparency.','To improve rendering performance, try not to use the CSS opacity property (found '+op.length+' nodes, marked with a dashed blue border).');
   };
 
+  JR.statsObject = {};
+
   JR.nodesTips = function(){
-    function level(value,mid,high){
-      return value<mid?'low':value<high?'mid':'high';
-    }
-    function revlevel(value,mid,high){
-      return value<mid?'high':value<high?'mid':'low';
-    }
     var nodes = $tagname('*'), i = nodes.length, nodecount = 0, ids = {}, multiIds = [], multiIdsElements = [],
       empty = 0, deprecated = 0, whitespace = 0, textnodes = 0, comments = 0, deprecatedTags = {}, emptyAttr = 0,
       js_byte = 0, js = 0, textnodeLength = 0,
@@ -607,10 +649,10 @@
 
     var contentPercent = textnodeLength/document.body.innerHTML.length*100
 
-    JR.stats(nodecount, 'nodes', level(nodecount,1500,3000));
-    JR.stats(textnodes, 'text nodes', level(textnodes,750,1500));
-    JR.stats((textnodeLength/1024).toFixed(1)+'k', 'text node size', level(textnodeLength,80000,500000));
-    JR.stats(contentPercent.toFixed(2)+'%', 'content percentage', revlevel(contentPercent, 25, 50));
+    JR.statsObject['nodecount'] = nodecount;
+    JR.statsObject['textnodes'] = textnodes;
+    JR.statsObject['textnodessize'] = textnodeLength;
+    JR.statsObject['contentpercent'] = contentPercent.toFixed(2);
 
     if(empty) JR.tip('There are '+empty+' empty nodes.','Removing them might improve performance.');
     if(deprecated) {
@@ -631,6 +673,24 @@
       JR.warn('There are '+emptyAttr+' HTML elements with empty source attributes.', 'Removing these nodes or updating the attributes will prevent double-loading of the page in some browsers. See this article for more information: '+dmlink('Empty image src can destroy your site','http://www.nczonline.net/blog/2009/11/30/empty-image-src-can-destroy-your-site/'))
     if(js&&js_byte)
       JR.tip('There are '+js_byte+' bytes of inline JavaScript code in '+js+' HTML nodes.', 'Removing the inline JavaScript, or updating the attributes will improve the loading speed of the page.');
+  };
+
+  JR.formatStats = function() {
+    function level(value,mid,high){
+      return value<mid?'low':value<high?'mid':'high';
+    }
+    function revlevel(value,mid,high){
+      return value<mid?'high':value<high?'mid':'low';
+    }
+    var o = JR.statsObject;
+    JR.stats(o['elements'], 'elements', level(o['elements'],750,1500));
+    JR.stats(o['nodecount'], 'nodes', level(o['nodecount'],1500,3000));
+    JR.stats(o['textnodes'], 'text nodes', level(o['textnodes'],750,1500));
+    JR.stats((o['textnodessize']/1024).toFixed(1)+'k', 'text node size', level(o['textnodessize'],80000,500000));
+    JR.stats(o['contentpercent']+'%', 'content percentage', revlevel(o['contentpercent'], 25, 50));
+    JR.stats(o['average'], 'average nesting depth', level(o['average'],8,15));
+    JR.stats((o['domsize']/1024).toFixed(1)+'k', 'serialized DOM size', level(o['domsize'],100*1024,250*1024));
+    JR.stats(o['bodycount']+'s', 'serialization time', level(o['bodycount'],0.05,0.1));
   };
 
   JR.statsHTML = '';
@@ -694,9 +754,6 @@
   JR.performanceTips = function(){
     var domsize = document.body.innerHTML.length;
 
-    function level(value,mid,high){
-      return value<mid?'low':value<high?'mid':'high';
-    }
     function parentNodes(node){
       var counter = 0;
       if(node.parentNode)
@@ -713,11 +770,11 @@
     }
     average = average/nodes.length;
 
-    JR.stats(nodes.length, 'elements', level(nodes.length,750,1500));
+    JR.statsObject['elements'] = nodes.length;
 
     JR.nodesTips();
-    JR.stats(average.toFixed(1), 'average nesting depth', level(average,8,15));
-    JR.stats((domsize/1024).toFixed(1)+'k', 'serialized DOM size', level(domsize,100*1024,250*1024));
+    JR.statsObject['average'] = average.toFixed(1);
+    JR.statsObject['domsize'] = domsize;
 
     if(domsize>(100*1024) && domsize<(250*1024))
       JR.tip('Your serialized DOM size is a little high.','Performance might improve if you reduce the amount of HTML.');
@@ -728,7 +785,7 @@
       document.body.appendChild(document.createTextNode(' '));
       var x = document.body.innerHTML;
     }, 10);
-    JR.stats(bodycount.toFixed(3)+'s', 'serialization time', level(bodycount,0.05,0.1));
+    JR.statsObject['bodycount'] = bodycount.toFixed(3);
     if(bodycount>0.1)
       JR.warn('Average DOM serialization speed is '+bodycount.toFixed(3)+'s.','Try to reduce the complexity of the DOM structure.');
 
@@ -793,6 +850,8 @@
     node.id = 'jr_results';
     body.appendChild(node);
 
+    JR.formatStats(JR.statsObject);
+
     JR.statsHTML +=
       '<a href="http://twitter.com/dom_monster" target="_new" style="'+JR.reset+';display:block;margin-top:20px;margin-right:10px;line-height:1.3;padding:6px 6px 6px 48px;background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAF7ElEQVR42q2WaUxUVxTHX2tSK5uyaQS0WIEZARGZDWZAoIhSQQRZBkYZ0FFBXLCmiGyxllhFwKgoAkWpWgVbUQHRurbVtvGDqYnUrRXbNF1iNdbUxqQm9PR%2Fn2%2FizZPCiHz4Zd65b949%2F3uWe69wNCf0RVCDfLADXAA94D54AO6BG%2BAgyAaOtsxpq2M9OAN6AdnIt8BnKASkgieABkE3cHwZAW7gD0CMYwvCxF%2BZLUf%2BvuJlBFgAMdqyddQ4W0H18b7UkODHgM1%2Bn6c%2BwZfq3vah5rkBTMRtfD9isAKaACaBALOWtk33psoID6qK9KIaUD3NkzbDZlRHegIvPHtSTZQX1c6YQPvSgqxR0A9WwAFAVhFHEIVd8UrKVThQrp89VRg86aAxmA6kTaEilTst9rWj5QEjqSVTxRzzKZo3WAGNspxCRCitM3hRIRw2p06hzkXhdHyRgWpnKejdEHfaMsOHOhbq5fWQ88ICsGJGAZsMPBMBmN2%2BMIxhHRefuf%2FKyR5QAHIMdOIzQi0chv3JfI12W9xEqotXyCdEJLR0OEtNR8xaydaJNsb7EhDXn4BXENrqr96ZeeVsfvRO2A7MeXNKoNA4Z5JbsdrlQbnOnTAm5VRHbVkaOrn0Lbq83kxXK%2FOoe%2FNS6q5cCjubjudGsYLlnf8LlMC6OJdjOWFb8LwCjGArX31%2BeQzd2ZBJt9anIZ%2FhteyPh%2BaphAMZU199Tz%2FmVkOikjotBuZcnPRSuYnu7Cqiq5ty6fzq2XRqWSydWxVP31Xl0%2B0dhRAXw0fiF2AnRhmRPZMfvbW7fC51LQ4n2OVssOlUXiTdhPNr61JQVIaeIzmhr2FcTEVNrHdnmdaN9qcH01FMerEoRXTyZWESQq6hNoZZTIfosBsR%2BboknY1bBXQBAYhpvVQ460oPFntiSQQh5c3sRRAq%2B6%2BuxRFiNcPp4%2FYFYeM%2BNgYLVTHjhYrwsc0b0deoh6cFiKrvsIRbHfCwb%2FvaITdy4R9xcsm0388ti8Z%2FxXdbrMUQi5d3uQnUrUhBY5K%2FUBHhsbcyepxU8ZIT0GnRU6dY9egGySEiwcIqF2bkis4J39%2FjamQeX5EK8ANftXAqfDjH%2F%2BJ2bKt8G36apaWdcwLpkBm2JYK6ciPp85WxdLkoQQytdSHgEfDgfEzmhJ0GdvK2iAMEyiXbASJ%2Ba%2Bd6m%2FV5EzagdD9Hmj9pJM33H0Um5UhaMnU07c7Q0NWyJDr2zMk3svlL5a3ZV29eBzfBMBABiMFvyeex2hWasZShcIJjd%2FpgpoIylU6UMtGeWs1hdJJF4en%2FC7h5DeAxIFDX305oBAR%2BAr%2FKi4y143V0S4HOg1LhcFOckq6UJFEWImFEVMoiJ9AJtJj0TQB3p3gojX0Ghg%2B0FaeAHwHxsAI7mx9Fl4sTKTvAmdJ87OmoZRp9sSqOMuDcCDbE%2BlIXukn65pIUUQK9YBN43dbDyBlck4voQASq4v3JhPBngtYcPW1NDKR0XwexFlCY1q74G7SBWpAH%2FAZzGu7jnbPW2z7bn5LftGPOrasWc29GRPZkqOl0XqS1C9YMxaW0iRfAVrY%2FI4Tqk4Nob6aG9hhVVJc8hepTguk4WvHCyul8C8YOhYAWQHIRiISYZ1S7RDhrT34T6gWThkJADaBBcA4ItiBg0%2BgPF9COjYidE1jl87diIHd%2BH6hsFoCc9QuOYNwNJus3RHk%2F%2FCgt%2BAZCzTrjAXbIR9hs%2Fjls1vUiLU%2BkbbcN%2BAPBVthp1y%2FvG8YKJWpXc0GQE5WFjjaxIxXRcGs1qezL9R4NazSjf95vDPbDBjWGXW6A8CIIa9UuA7G6ROPaW6p1pbUq54TK6PFCfaJSwC3JEXYPuFuqcXt9d3KAgFSJICJ90bcATN4fZkASj8F4JqooxFkoVru2SeP3cG0btVblIlRP9xbYPaIlM0Q4KKPFpBJP1w6LnmdAAWs4AQ3ceCA3fh0MA0KRShQmlGrd%2BqQq5g2hLkEh7Iz3szKggOFSFEzsmRv3AN%2BDP0Gq%2FLvi%2FwHpEqPH8x%2FFZLYKQrropQAAAABJRU5ErkJggg==) no-repeat 5px 5px #ddf8ff;border:2px solid #00ceff;border-radius:4px;color:#42c2e0;text-decoration:none">For daily tips, follow @dom_monster on Twitter!</a>';
 
@@ -814,6 +873,9 @@
           '<span style="'+JR.reset+'color:#888;font-size:10px;text-decoration:underline;cursor:pointer" onclick="document.getElementById(\'jr_results_tips\').saveResults()">'+
             'save to Jdrop'+
           '</span>'+
+          '<span style="'+JR.reset+'padding-left:10px;color:#888;font-size:10px;text-decoration:underline;cursor:pointer" onclick="document.getElementById(\'jr_results_tips\').sendToShowSlow()" title="send to Show Slow ('+JR.showslowurl+')">'+
+            'send to Show Slow'+
+          '</span>'+
           '<span style="'+JR.reset+'padding-left:10px;color:#888;font-size:10px;text-decoration:underline;cursor:pointer" onclick="var r=document.getElementById(\'jr_results_tips\');r.parentNode.removeChild(r);">'+
             'close'+
           '</span>'+
@@ -828,6 +890,7 @@
     }, 10);
 
     $('jr_results_tips').saveResults = JR.saveResults;
+    $('jr_results_tips').sendToShowSlow = JR.sendToShowSlow;
   },10);
  })();
 
