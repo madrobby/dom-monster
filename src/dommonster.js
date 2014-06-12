@@ -499,7 +499,7 @@
     while(i--){
       var opacity = JR.getStyle(nodes[i],'opacity') || 1;
       if(opacity<1) {
-        nodes[i].style.cssText += ';border:1px dashed #00f';
+        nodes[i].className += ' DomMOpacity';
         op.push(nodes[i]);
         if(JR._console) console.info('Transparent node', nodes[i]);
       }
@@ -708,7 +708,7 @@
       average += parentNodes(nodes[i]);
       if(parentNodes(nodes[i])>15){
         very = true;
-        nodes[i].style.cssText += ';border:1px dashed #f00';
+        nodes[i].className += ' DomMError';
       }
     }
     average = average/nodes.length;
@@ -789,9 +789,10 @@
           'User agent: '+navigator.userAgent
         ].concat(printStackTrace({e:error})));
     }
-    var body = $tagname('body')[0], node = document.createElement('div');
+    var body = $tagname('body')[0], node = document.createElement('div'), styles = document.createElement('style');
     node.id = 'jr_results';
     body.appendChild(node);
+    body.appendChild(styles);
 
     JR.statsHTML +=
       '<a href="http://twitter.com/dom_monster" target="_new" style="'+JR.reset+';display:block;margin-top:20px;margin-right:10px;line-height:1.3;padding:6px 6px 6px 48px;background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAF7ElEQVR42q2WaUxUVxTHX2tSK5uyaQS0WIEZARGZDWZAoIhSQQRZBkYZ0FFBXLCmiGyxllhFwKgoAkWpWgVbUQHRurbVtvGDqYnUrRXbNF1iNdbUxqQm9PR%2Fn2%2FizZPCiHz4Zd65b949%2F3uWe69wNCf0RVCDfLADXAA94D54AO6BG%2BAgyAaOtsxpq2M9OAN6AdnIt8BnKASkgieABkE3cHwZAW7gD0CMYwvCxF%2BZLUf%2BvuJlBFgAMdqyddQ4W0H18b7UkODHgM1%2Bn6c%2BwZfq3vah5rkBTMRtfD9isAKaACaBALOWtk33psoID6qK9KIaUD3NkzbDZlRHegIvPHtSTZQX1c6YQPvSgqxR0A9WwAFAVhFHEIVd8UrKVThQrp89VRg86aAxmA6kTaEilTst9rWj5QEjqSVTxRzzKZo3WAGNspxCRCitM3hRIRw2p06hzkXhdHyRgWpnKejdEHfaMsOHOhbq5fWQ88ICsGJGAZsMPBMBmN2%2BMIxhHRefuf%2FKyR5QAHIMdOIzQi0chv3JfI12W9xEqotXyCdEJLR0OEtNR8xaydaJNsb7EhDXn4BXENrqr96ZeeVsfvRO2A7MeXNKoNA4Z5JbsdrlQbnOnTAm5VRHbVkaOrn0Lbq83kxXK%2FOoe%2FNS6q5cCjubjudGsYLlnf8LlMC6OJdjOWFb8LwCjGArX31%2BeQzd2ZBJt9anIZ%2FhteyPh%2BaphAMZU199Tz%2FmVkOikjotBuZcnPRSuYnu7Cqiq5ty6fzq2XRqWSydWxVP31Xl0%2B0dhRAXw0fiF2AnRhmRPZMfvbW7fC51LQ4n2OVssOlUXiTdhPNr61JQVIaeIzmhr2FcTEVNrHdnmdaN9qcH01FMerEoRXTyZWESQq6hNoZZTIfosBsR%2BboknY1bBXQBAYhpvVQ460oPFntiSQQh5c3sRRAq%2B6%2BuxRFiNcPp4%2FYFYeM%2BNgYLVTHjhYrwsc0b0deoh6cFiKrvsIRbHfCwb%2FvaITdy4R9xcsm0388ti8Z%2FxXdbrMUQi5d3uQnUrUhBY5K%2FUBHhsbcyepxU8ZIT0GnRU6dY9egGySEiwcIqF2bkis4J39%2FjamQeX5EK8ANftXAqfDjH%2F%2BJ2bKt8G36apaWdcwLpkBm2JYK6ciPp85WxdLkoQQytdSHgEfDgfEzmhJ0GdvK2iAMEyiXbASJ%2Ba%2Bd6m%2FV5EzagdD9Hmj9pJM33H0Um5UhaMnU07c7Q0NWyJDr2zMk3svlL5a3ZV29eBzfBMBABiMFvyeex2hWasZShcIJjd%2FpgpoIylU6UMtGeWs1hdJJF4en%2FC7h5DeAxIFDX305oBAR%2BAr%2FKi4y143V0S4HOg1LhcFOckq6UJFEWImFEVMoiJ9AJtJj0TQB3p3gojX0Ghg%2B0FaeAHwHxsAI7mx9Fl4sTKTvAmdJ87OmoZRp9sSqOMuDcCDbE%2BlIXukn65pIUUQK9YBN43dbDyBlck4voQASq4v3JhPBngtYcPW1NDKR0XwexFlCY1q74G7SBWpAH%2FAZzGu7jnbPW2z7bn5LftGPOrasWc29GRPZkqOl0XqS1C9YMxaW0iRfAVrY%2FI4Tqk4Nob6aG9hhVVJc8hepTguk4WvHCyul8C8YOhYAWQHIRiISYZ1S7RDhrT34T6gWThkJADaBBcA4ItiBg0%2BgPF9COjYidE1jl87diIHd%2BH6hsFoCc9QuOYNwNJus3RHk%2F%2FCgt%2BAZCzTrjAXbIR9hs%2Fjls1vUiLU%2BkbbcN%2BAPBVthp1y%2FvG8YKJWpXc0GQE5WFjjaxIxXRcGs1qezL9R4NazSjf95vDPbDBjWGXW6A8CIIa9UuA7G6ROPaW6p1pbUq54TK6PFCfaJSwC3JEXYPuFuqcXt9d3KAgFSJICJ90bcATN4fZkASj8F4JqooxFkoVru2SeP3cG0btVblIlRP9xbYPaIlM0Q4KKPFpBJP1w6LnmdAAWs4AQ3ceCA3fh0MA0KRShQmlGrd%2BqQq5g2hLkEh7Iz3szKggOFSFEzsmRv3AN%2BDP0Gq%2FLvi%2FwHpEqPH8x%2FFZLYKQrropQAAAABJRU5ErkJggg==) no-repeat 5px 5px #ddf8ff;border:2px solid #00ceff;border-radius:4px;color:#42c2e0;text-decoration:none">For daily tips, follow @dom_monster on Twitter!</a>';
@@ -822,6 +823,7 @@
         '<div style="'+JR.reset+'float:left;width:220px;padding:4px;margin-top:2px" id="jr_stats">'+
         '</div>'+
       '</div>';
+    styles.innerHTML = '.DomMOpacity{border: 1px dashed #00f} .DomMError{border: 1px dashed #f00}';
     JR.flush();
     setTimeout(function(){
       $('jr_results_tips').style.cssText += ';-webkit-transform:translateY(0px)';
